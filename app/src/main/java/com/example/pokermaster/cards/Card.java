@@ -1,4 +1,4 @@
-package com.example.pokermaster.game_state;
+package com.example.pokermaster.cards;
 
 import android.util.Log;
 

@@ -1,4 +1,4 @@
-package com.example.pokermaster.game_state;
+package com.example.pokermaster.cards;
 
 /**
  * The suit of a poker card

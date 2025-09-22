@@ -1,4 +1,4 @@
-package com.example.pokermaster.game_state;
+package com.example.pokermaster.cards;
 
 /**
  * Data class representing the two private cards dealt to each player at the start of the game.
