@@ -8,13 +8,15 @@ import android.util.Log;
 public class Card {
     private static final String TAG = Card.class.getCanonicalName();
 
+    public static final int MAX_RANK = 52;
+    public static final int MIN_RANK = 1;
+    private static final int RANK_HASH_BIT_COUNT = Integer.SIZE - Integer.numberOfLeadingZeros(MAX_RANK);
+    private static final int RANK_HASH_MASK = (int) ((1L << RANK_HASH_BIT_COUNT) - 1);
+
     private static final int SPADE_HASH_MASK = 0b00;
     private static final int HEART_HASH_MASK = 0b01;
     private static final int DIAMOND_HASH_MASK = 0b10;
     private static final int CLUB_HASH_MASK = 0b11;
-
-    public static final int MAX_RANK = 52;
-    public static final int MIN_RANK = 1;
 
     private final int mRank;
     private final Suit mSuit;
@@ -60,5 +62,11 @@ public class Card {
         final String errorMessage = "Unknown suit was inserted to Card object";
         Log.e(TAG, "getSuitHashMask: " + errorMessage);
         throw new IllegalStateException(errorMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        final int suitHash = getSuitHashMask();
+        return (mRank & RANK_HASH_MASK) | (suitHash << RANK_HASH_BIT_COUNT);
     }
 }
