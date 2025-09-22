@@ -2,6 +2,8 @@ package com.example.pokermaster.hands;
 
 /**
  * An abstraction over the type of hands in Texas hold 'em Poker.
+ * Note that when comparing two hands, the better one will be considered SMALLER (and its compareTo
+ * function will return a negative value).
  */
 public interface PokerHand extends Comparable<PokerHand> {
     /**
