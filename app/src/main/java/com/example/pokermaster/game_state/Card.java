@@ -13,10 +13,10 @@ public class Card {
     private static final int RANK_HASH_BIT_COUNT = Integer.SIZE - Integer.numberOfLeadingZeros(MAX_RANK);
     private static final int RANK_HASH_MASK = (int) ((1L << RANK_HASH_BIT_COUNT) - 1);
 
-    private static final int SPADE_HASH_MASK = 0b00;
-    private static final int HEART_HASH_MASK = 0b01;
-    private static final int DIAMOND_HASH_MASK = 0b10;
-    private static final int CLUB_HASH_MASK = 0b11;
+    private static final int SPADE_HASH = 0b00;
+    private static final int HEART_HASH = 0b01;
+    private static final int DIAMOND_HASH = 0b10;
+    private static final int CLUB_HASH = 0b11;
 
     private final int mRank;
     private final Suit mSuit;
@@ -50,13 +50,13 @@ public class Card {
     private int getSuitHashMask() {
         switch (mSuit) {
             case SPADE:
-                return SPADE_HASH_MASK;
+                return SPADE_HASH;
             case HEART:
-                return HEART_HASH_MASK;
+                return HEART_HASH;
             case DIAMOND:
-                return DIAMOND_HASH_MASK;
+                return DIAMOND_HASH;
             case CLUB:
-                return CLUB_HASH_MASK;
+                return CLUB_HASH;
         }
 
         final String errorMessage = "Unknown suit was inserted to Card object";
