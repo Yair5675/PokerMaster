@@ -27,4 +27,20 @@ public class HoleCards {
     public void setSecondCard(Card secondCard) {
         mSecondCard = secondCard;
     }
+
+    /**
+     * Checks if both cards have the same {@link Suit}.
+     * @return True if both cards have the same suit.
+     */
+    public boolean isSuited() {
+        return mFirstCard.getSuit() == mSecondCard.getSuit();
+    }
+
+    /**
+     * Checks if both cards do NOT have the same {@link Suit}.
+     * @return True if the suits of the cards differ.
+     */
+    public boolean isOffSuited() {
+        return mFirstCard.getSuit() != mSecondCard.getSuit();
+    }
 }
