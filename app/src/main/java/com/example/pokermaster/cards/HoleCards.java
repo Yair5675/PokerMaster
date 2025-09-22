@@ -1,5 +1,7 @@
 package com.example.pokermaster.cards;
 
+import java.util.Objects;
+
 /**
  * Data class representing the two private cards dealt to each player at the start of the game.
  */
@@ -42,5 +44,20 @@ public class HoleCards {
      */
     public boolean isOffSuited() {
         return mFirstCard.getSuit() != mSecondCard.getSuit();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof HoleCards) {
+            final HoleCards otherCards = (HoleCards) other;
+            return otherCards.mFirstCard.equals(mFirstCard) &&
+                    otherCards.getSecondCard().equals(mSecondCard);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mFirstCard.hashCode(), mSecondCard.hashCode());
     }
 }
