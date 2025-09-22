@@ -65,6 +65,16 @@ public class Card {
     }
 
     @Override
+    public boolean equals(Object other) {
+        if (other instanceof Card) {
+            final Card otherCard = (Card) other;
+            return otherCard.hashCode() == this.hashCode(); // Relies on unique hashCode property
+        }
+
+        return false;
+    }
+
+    @Override
     public int hashCode() {
         final int suitHash = getSuitHashMask();
         return (mRank & RANK_HASH_MASK) | (suitHash << RANK_HASH_BIT_COUNT);

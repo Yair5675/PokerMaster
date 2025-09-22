@@ -60,7 +60,6 @@ public class HashDeck implements Deck {
 
     @Override
     public boolean isInDeck(Card card) {
-        // TODO: Implement equals for Card
         return mCards.contains(card);
     }
 
