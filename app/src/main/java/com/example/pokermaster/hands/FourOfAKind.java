@@ -1,5 +1,7 @@
 package com.example.pokermaster.hands;
 
+import androidx.annotation.NonNull;
+
 public class FourOfAKind implements PokerHand {
     private static final int HAND_RANK = 2;
     private final int mMatchingCardRank;
@@ -24,13 +26,14 @@ public class FourOfAKind implements PokerHand {
     }
 
     @Override
-    public int compareTo(PokerHand pokerHand) {
+    public int compareTo(@NonNull PokerHand pokerHand) {
         if (this == pokerHand)
             return 0;
         if (pokerHand instanceof FourOfAKind) {
             FourOfAKind other = (FourOfAKind) pokerHand;
             final int matchingCardComparison = Integer.compare(
-                    mMatchingCardRank, other.mMatchingCardRank
+                    // Order inverted intentionally! (our higher rank should make the result negative)
+                    other.mMatchingCardRank, mMatchingCardRank
             );
             if (matchingCardComparison != 0)
                 return matchingCardComparison;
