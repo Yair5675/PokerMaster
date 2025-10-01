@@ -8,8 +8,13 @@ import android.util.Log;
 public class Card {
     private static final String TAG = Card.class.getCanonicalName();
 
-    public static final int MAX_RANK = 14;  // Rank 14 is Ace
+    public static final int MAX_RANK = 14;
     public static final int MIN_RANK = 2;
+    public static final int ACE_RANK = 14;
+    public static final int KING_RANK = 13;
+    public static final int QUEEN_RANK = 12;
+    public static final int JACK_RANK = 11;
+
     private static final int RANK_HASH_BIT_COUNT = Integer.SIZE - Integer.numberOfLeadingZeros(MAX_RANK);
     private static final int RANK_HASH_MASK = (int) ((1L << RANK_HASH_BIT_COUNT) - 1);
 
