@@ -3,6 +3,7 @@ package com.example.pokermaster.hands.creators;
 import com.example.pokermaster.cards.Card;
 import com.example.pokermaster.hands.HandProperties;
 import com.example.pokermaster.hands.PokerHand;
+import com.example.pokermaster.hands.creators.exceptions.PokerHandCreatorException;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public interface PokerHandCreator {
      * @param rawHand A list of {@link Card cards} that will make up the hand.
      * @param properties The properties of the given raw hand.
      * @return A {@link PokerHand} instance representing the given raw hand.
+     * @throws PokerHandCreatorException If any error occurs when creating the hand, like properties
+     *                                   that don't match the specific hand type.
      */
-    PokerHand create(List<Card> rawHand, HandProperties properties);
+    PokerHand create(List<Card> rawHand, HandProperties properties) throws PokerHandCreatorException;
 }
