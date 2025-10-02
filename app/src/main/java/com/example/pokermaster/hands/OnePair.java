@@ -2,40 +2,36 @@ package com.example.pokermaster.hands;
 
 import androidx.annotation.NonNull;
 
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OnePair implements PokerHand {
     private static final int HAND_RANK = 8;
     public static final int EXPECTED_KICKERS_COUNT = 3;
 
     private final int mPairRank;
-    private final int[] mSortedKickersRanks;
+    private final List<Integer> mSortedKickersRanks;
 
-    public OnePair(int pairRank, int[] sortedKickersRanks) {
-        if (sortedKickersRanks.length != EXPECTED_KICKERS_COUNT) {
+    public OnePair(int pairRank, List<Integer> kickersRanks) {
+        if (kickersRanks.size() != EXPECTED_KICKERS_COUNT) {
             throw new IllegalArgumentException(String.format(
                     "Expected %d kickers, got %d",
-                    EXPECTED_KICKERS_COUNT, sortedKickersRanks.length
+                    EXPECTED_KICKERS_COUNT, kickersRanks.size()
             ));
         }
         mPairRank = pairRank;
-        mSortedKickersRanks = Arrays.copyOf(sortedKickersRanks, EXPECTED_KICKERS_COUNT);
-        sortKickersReversed();
-    }
-
-    private void sortKickersReversed() {
-        Arrays.sort(mSortedKickersRanks);
-        final int length = mSortedKickersRanks.length;
-        for (int i = 0; i < length / 2; i++) {
-            mSortedKickersRanks[i] = mSortedKickersRanks[length - i - 1];
-        }
+        mSortedKickersRanks = kickersRanks
+                .stream()
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
     }
 
     public int getPairRank() {
         return mPairRank;
     }
 
-    public int[] getSortedKickersRanks() {
+    public List<Integer> getSortedKickersRanks() {
         return mSortedKickersRanks;
     }
 
@@ -55,8 +51,8 @@ public class OnePair implements PokerHand {
             // Order inverted intentionally! (our higher rank should make the result negative)
             if ((comparison = Integer.compare(other.mPairRank, mPairRank)) != 0)
                 return comparison;
-            for (int i = 0; i < mSortedKickersRanks.length; i++) {
-                comparison = Integer.compare(other.mSortedKickersRanks[i], mSortedKickersRanks[i]);
+            for (int i = 0; i < mSortedKickersRanks.size(); i++) {
+                comparison = Integer.compare(other.mSortedKickersRanks.get(i), mSortedKickersRanks.get(i));
                 if (comparison != 0)
                     return comparison;
             }
