@@ -2,7 +2,6 @@ package com.example.pokermaster.hands;
 
 import com.example.pokermaster.cards.Suit;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,15 +12,15 @@ public class Flush implements PokerHand {
     private final Suit mMatchingSuit;
     private final List<Integer> mSortedCardsRanks;
 
-    public Flush(int[] cardRanks, Suit matchingSuit) {
-        if (cardRanks.length != EXPECTED_CARDS_COUNT) {
+    public Flush(List<Integer> cardRanks, Suit matchingSuit) {
+        if (cardRanks.size() != EXPECTED_CARDS_COUNT) {
             throw new IllegalArgumentException(String.format(
-                    "Expected %d cards, got %d instead", EXPECTED_CARDS_COUNT, cardRanks.length
+                    "Expected %d cards, got %d instead", EXPECTED_CARDS_COUNT, cardRanks.size()
             ));
         }
 
-        mSortedCardsRanks = Arrays.stream(cardRanks)
-                .boxed()
+        mSortedCardsRanks = cardRanks
+                .stream()
                 .sorted(Collections.reverseOrder())
                 .collect(Collectors.toList());
         mMatchingSuit = matchingSuit;
