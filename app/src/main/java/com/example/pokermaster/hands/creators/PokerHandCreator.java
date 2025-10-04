@@ -21,4 +21,7 @@ public interface PokerHandCreator {
      *                                   that don't match the specific hand type.
      */
     PokerHand create(List<Card> rawHand, HandProperties properties) throws PokerHandCreatorException;
+
+    // TODO: Make all implementations throw InvalidHandSizeException if the raw hand is not exactly
+    //  5 cards
 }
