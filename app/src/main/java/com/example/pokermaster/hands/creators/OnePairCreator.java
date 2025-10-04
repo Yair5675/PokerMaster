@@ -4,7 +4,9 @@ import com.example.pokermaster.cards.Card;
 import com.example.pokermaster.hands.HandProperties;
 import com.example.pokermaster.hands.OnePair;
 import com.example.pokermaster.hands.PokerHand;
+import com.example.pokermaster.hands.creators.exceptions.InvalidHandSizeException;
 import com.example.pokermaster.hands.creators.exceptions.MissingRankRepetitionsException;
+import com.example.pokermaster.hands.creators.exceptions.PokerHandCreatorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,12 @@ public class OnePairCreator implements PokerHandCreator {
      */
 
     @Override
-    public PokerHand create(List<Card> rawHand, HandProperties properties) throws MissingRankRepetitionsException {
+    public PokerHand create(List<Card> rawHand, HandProperties properties) throws PokerHandCreatorException {
+        if (rawHand.size() != PokerHand.HAND_SIZE)
+            throw new InvalidHandSizeException(String.format(
+                    "Expected %d cards in raw hand, got %d", PokerHand.HAND_SIZE, rawHand.size()
+            ));
+
         int pairRank = Integer.MIN_VALUE;
         final List<Integer> kickerRanks = new ArrayList<>(rawHand.size() - PAIR_REPETITIONS);
         for (Map.Entry<Integer, Integer> rankToRepetitions : properties.getRankToRepetitions().entrySet()) {
