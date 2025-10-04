@@ -7,6 +7,11 @@ package com.example.pokermaster.hands;
  */
 public interface PokerHand extends Comparable<PokerHand> {
     /**
+     * Number of cards in a single hand
+     */
+    int HAND_SIZE = 5;
+
+    /**
      * Returns the ranking of the hand's TYPE.
      * The implementation should be static (and ideally constant).
      * @return A number indicating the rank of the implementing poker hand class.
