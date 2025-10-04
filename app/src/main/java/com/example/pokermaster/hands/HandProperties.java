@@ -183,9 +183,9 @@ public class HandProperties {
     /**
      * Checks if the {@link PokerHand Hand} is a {@link OnePair} based on its properties.
      * @return {@code true} if the hand is a One-Pair.
-     * @apiNote {@link FourOfAKind}, {@link ThreeOfAKind}, {@link FullHouse} and {@link TwoPair}
-     *          all contain at least one pair of matching ranks, which qualifies them as a
-     *          {@link OnePair} and therefore would make this function return {@code true}.
+     * @apiNote Both {@link FullHouse} and {@link TwoPair} contain at least one pair of matching
+     *          ranks, which qualifies them as a {@link OnePair} and therefore would make this
+     *          function return {@code true}.
      *          For this reason, when querying the type of hand, do it from the best to worst
      *          hand.
      */
@@ -193,6 +193,6 @@ public class HandProperties {
         return mRankToRepetitions
                 .values()
                 .stream()
-                .anyMatch(repetitions -> repetitions >= 2);
+                .anyMatch(repetitions -> repetitions == 2);
     }
 }
