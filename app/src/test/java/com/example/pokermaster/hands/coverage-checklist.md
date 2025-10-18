@@ -13,7 +13,7 @@ A reference checklist to ensure thorough coverage of poker hand evaluation logic
 * [X] Two Pair (exactly two distinct pairs, not three of a kind / full house)
 * [X] Three of a Kind (exactly three, not full house)
 * [X] Straight (all suits, Ace both low `A-2-3-4-5` and high `10-J-Q-K-A`)
-* [ ] Flush (all suits, no straight)
+* [X] Flush (all suits, no straight)
 * [ ] Full House (exactly 3 + 2)
 * [ ] Four of a Kind
 * [ ] Straight Flush (non-royal)

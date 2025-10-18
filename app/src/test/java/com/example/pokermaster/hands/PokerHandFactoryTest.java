@@ -219,4 +219,35 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong highest card rank", straightHighRanks[handIndex], straight.getHighestCardRank());
         }
     }
+
+    @Test
+    public void testFlushSanity() throws PokerHandCreatorException {
+        Card[][] hands = {
+                { card("A♠"), card("10♠"), card("8♠"), card("5♠"), card("2♠") },
+                { card("K♥"), card("J♥"), card("9♥"), card("6♥"), card("3♥") },
+                { card("Q♦"), card("10♦"), card("7♦"), card("5♦"), card("2♦") },
+                { card("J♣"), card("9♣"), card("6♣"), card("4♣"), card("3♣") },
+                { card("10♠"), card("8♠"), card("7♠"), card("5♠"), card("4♠") },
+                { card("9♥"), card("7♥"), card("6♥"), card("3♥"), card("2♥") },
+                { card("8♦"), card("6♦"), card("5♦"), card("4♦"), card("3♦") },
+                { card("7♣"), card("5♣"), card("4♣"), card("3♣"), card("2♣") },
+                { card("A♥"), card("K♥"), card("10♥"), card("7♥"), card("6♥") },
+                { card("Q♠"), card("J♠"), card("9♠"), card("8♠"), card("3♠") }
+        };
+
+        Suit[] flushSuits = {
+                Suit.SPADE, Suit.HEART, Suit.DIAMOND, Suit.CLUB, Suit.SPADE,
+                Suit.HEART, Suit.DIAMOND, Suit.CLUB, Suit.HEART, Suit.SPADE
+        };
+
+        for (int handIndex = 0; handIndex < hands.length; handIndex++) {
+            final Card[] hand = hands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not Flush", bestHand instanceof Flush);
+            Flush flush = (Flush) bestHand;
+            assertEquals("Wrong matching suit", flushSuits[handIndex], flush.getMatchingSuit());
+        }
+    }
 }
