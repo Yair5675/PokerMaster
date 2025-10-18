@@ -103,6 +103,11 @@ public final class PokerHandFactory {
         final int firstRank = rankSortedHand.get(0).getRank();
         rankToRepetitions.put(firstRank, 1);
 
+        final boolean isLowAceStraightPossible = (
+                rankSortedHand.get(3).getRank() == 5 &&
+                rankSortedHand.get(4).getRank() == Card.ACE_RANK
+        );
+
         int highCardRank = firstRank;
 
         for (int i = 1; i < rankSortedHand.size(); i++) {
@@ -111,12 +116,19 @@ public final class PokerHandFactory {
 
             highCardRank = Math.max(highCardRank, currentCard.getRank());
             isSameSuit &= currentCard.getSuit() == previousCard.getSuit();
-            isSequential &= currentCard.getRank() == previousCard.getRank() + 1;
+            isSequential &= (
+                    currentCard.getRank() == previousCard.getRank() + 1 ||
+                    (previousCard.getRank() == 5 && isLowAceStraightPossible)
+            );
             rankToRepetitions.put(
                     currentCard.getRank(),
                     rankToRepetitions.getOrDefault(currentCard.getRank(), 0) + 1
             );
         }
+
+        // In the case of a low-ace straight, the ace's rank should be considered '1':
+        if (isSequential && isLowAceStraightPossible)
+            highCardRank = 5;
 
         return new HandProperties(highCardRank, isSameSuit, isSequential, rankToRepetitions);
     }
