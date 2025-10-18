@@ -335,7 +335,6 @@ public class PokerHandFactoryTest {
                 { card("7♦"), card("8♦"), card("9♦"), card("10♦"), card("J♦") }, // Jack-high straight flush
                 { card("8♣"), card("9♣"), card("10♣"), card("J♣"), card("Q♣") }, // Queen-high straight flush
                 { card("9♠"), card("10♠"), card("J♠"), card("Q♠"), card("K♠") }, // King-high straight flush
-                { card("10♥"), card("J♥"), card("Q♥"), card("K♥"), card("A♥") }  // Ace-high straight flush
         };
 
         int[] straightFlushHighRanks = {

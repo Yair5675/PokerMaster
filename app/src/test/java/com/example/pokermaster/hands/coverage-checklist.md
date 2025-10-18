@@ -16,7 +16,7 @@ A reference checklist to ensure thorough coverage of poker hand evaluation logic
 * [X] Flush (all suits, no straight)
 * [X] Full House (exactly 3 + 2)
 * [X] Four of a Kind
-* [ ] Straight Flush (non-royal)
+* [X] Straight Flush (non-royal)
 * [ ] Royal Flush (`10-J-Q-K-A` same suit)
 
 ---
