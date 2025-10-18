@@ -2,6 +2,8 @@ package com.example.pokermaster.cards;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a single card in a poker game.
  */
@@ -14,6 +16,15 @@ public class Card {
     public static final int KING_RANK = 13;
     public static final int QUEEN_RANK = 12;
     public static final int JACK_RANK = 11;
+
+    private static final String ACE_SYMBOL = "A";
+    private static final String KING_SYMBOL = "K";
+    private static final String QUEEN_SYMBOL = "Q";
+    private static final String JACK_SYMBOL = "J";
+
+    private static final String RANK_TAG = "<r>";
+    private static final String SUIT_TAG = "<s>";
+    private static final String TO_STRING_TEMPLATE = RANK_TAG + SUIT_TAG;
 
     private static final int RANK_HASH_BIT_COUNT = Integer.SIZE - Integer.numberOfLeadingZeros(MAX_RANK);
     private static final int RANK_HASH_MASK = (int) ((1L << RANK_HASH_BIT_COUNT) - 1);
@@ -83,5 +94,42 @@ public class Card {
     public int hashCode() {
         final int suitHash = getSuitHashMask();
         return (mRank & RANK_HASH_MASK) | (suitHash << RANK_HASH_BIT_COUNT);
+    }
+
+    /**
+     * Returns the visual representation of the current {@link Card card}'s rank.
+     * <p>
+     *     For ranks between 1 and 10 (inclusively), it is merely the number itself, but for all
+     *     ranks between {@link Card#JACK_RANK Jack} and {@link Card#ACE_RANK} a special symbol
+     *     is assigned.
+     * </p>
+     * @return The string representing the current card's rank.
+     */
+    private String getRankSymbol() {
+        switch (mRank) {
+            case ACE_RANK:
+                return ACE_SYMBOL;
+            case KING_RANK:
+                return KING_SYMBOL;
+            case QUEEN_RANK:
+                return QUEEN_SYMBOL;
+            case JACK_RANK:
+                return JACK_SYMBOL;
+            default:
+                return Integer.toString(mRank);
+        }
+    }
+
+    /**
+     * {@code toString} implementation for the {@link Card} class, presenting a card in a pretty
+     * representation.
+     * @return String representation of the current card.
+     */
+    @NonNull
+    @Override
+    public String toString() {
+        final String rankSymbol = getRankSymbol();
+        final String suitSymbol = mSuit.toString();
+        return TO_STRING_TEMPLATE.replace(RANK_TAG, rankSymbol).replace(SUIT_TAG, suitSymbol);
     }
 }
