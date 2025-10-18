@@ -7,6 +7,8 @@ import com.example.pokermaster.hands.creators.exceptions.PokerHandCreatorExcepti
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 
 public class PokerHandFactoryTest {
     /**
@@ -62,6 +64,49 @@ public class PokerHandFactoryTest {
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
             assertTrue("Best hand was not High Card", bestHand instanceof HighCard);
+        }
+    }
+
+    @Test
+    public void testOnePairSanity() throws PokerHandCreatorException {
+        final Card[][] onePairHands = {
+            { card("A♠"),  card("A♦"),  card("9♥"),  card("6♣"),  card("3♠") }, // Pair of Aces
+            { card("K♣"),  card("K♥"),  card("10♦"), card("8♠"),  card("4♣") }, // Pair of Kings
+            { card("Q♦"),  card("Q♠"),  card("9♣"),  card("5♥"),  card("2♦") }, // Pair of Queens
+            { card("J♥"),  card("J♣"),  card("8♦"),  card("6♠"),  card("3♥") }, // Pair of Jacks
+            { card("10♣"), card("10♠"), card("7♦"),  card("5♥"),  card("4♠") }, // Pair of Tens
+            { card("9♦"),  card("9♠"),  card("8♣"),  card("6♥"),  card("2♦") }, // Pair of Nines
+            { card("8♠"),  card("8♦"),  card("7♥"),  card("5♣"),  card("3♠") }, // Pair of Eights
+            { card("7♣"),  card("7♠"),  card("9♦"),  card("6♥"),  card("4♣") }, // Pair of Sevens
+            { card("6♦"),  card("6♠"),  card("10♥"), card("8♣"),  card("2♥") }, // Pair of Sixes
+            { card("5♣"),  card("5♦"),  card("9♠"),  card("7♥"),  card("3♣") }  // Pair of Fives
+        };
+        final int[] pairRanks = {
+                Card.ACE_RANK, Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10, 9, 8, 7, 6, 5
+        };
+        final List<List<Integer>> sortedKickersRanks = List.of(
+                List.of(9, 6, 3),
+                List.of(10, 8, 4),
+                List.of(9, 5, 2),
+                List.of(8, 6, 3),
+                List.of(7, 5, 4),
+                List.of(8, 6, 2),
+                List.of(7, 5, 3),
+                List.of(9, 6, 4),
+                List.of(10, 8, 2),
+                List.of(9, 7, 3)
+        );
+
+        for (int handIndex = 0; handIndex < onePairHands.length; handIndex++) {
+            final Card[] hand = onePairHands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not One Pair", bestHand instanceof OnePair);
+
+            final OnePair onePair = (OnePair) bestHand;
+            assertEquals("One Pair doesn't contain correct pair rank", pairRanks[handIndex], onePair.getPairRank());
+            assertEquals("Kicker ranks weren't sorted correctly", sortedKickersRanks.get(handIndex), onePair.getSortedKickersRanks());
         }
     }
 }

@@ -8,8 +8,8 @@ A reference checklist to ensure thorough coverage of poker hand evaluation logic
 
 ### 1. Hand Category Detection
 
-* [ ] High Card (no pairs, no straights, no flushes)
-* [ ] One Pair (exactly one pair, no better hand)
+* [X] High Card (no pairs, no straights, no flushes)
+* [X] One Pair (exactly one pair, no better hand)
 * [ ] Two Pair (exactly two distinct pairs, not three of a kind / full house)
 * [ ] Three of a Kind (exactly three, not full house)
 * [ ] Straight (all suits, Ace both low `A-2-3-4-5` and high `10-J-Q-K-A`)
