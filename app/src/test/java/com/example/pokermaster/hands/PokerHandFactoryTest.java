@@ -250,4 +250,39 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong matching suit", flushSuits[handIndex], flush.getMatchingSuit());
         }
     }
+
+    @Test
+    public void testFullHouseSanity() throws PokerHandCreatorException {
+        Card[][] fullHouseHands = {
+                { card("A♠"), card("A♦"), card("A♣"), card("K♠"), card("K♦") }, // Aces full of Kings
+                { card("K♣"), card("K♥"), card("K♦"), card("Q♠"), card("Q♥") }, // Kings full of Queens
+                { card("Q♠"), card("Q♦"), card("Q♣"), card("J♣"), card("J♦") }, // Queens full of Jacks
+                { card("J♥"), card("J♦"), card("J♠"), card("10♣"), card("10♦") }, // Jacks full of Tens
+                { card("10♠"), card("10♦"), card("10♥"), card("9♣"), card("9♠") }, // Tens full of Nines
+                { card("9♣"), card("9♦"), card("9♥"), card("8♠"), card("8♦") }, // Nines full of Eights
+                { card("8♦"), card("8♣"), card("8♠"), card("7♥"), card("7♠") }, // Eights full of Sevens
+                { card("7♣"), card("7♦"), card("7♠"), card("6♥"), card("6♠") }, // Sevens full of Sixes
+                { card("6♠"), card("6♦"), card("6♣"), card("5♥"), card("5♠") }, // Sixes full of Fives
+                { card("5♣"), card("5♦"), card("5♥"), card("4♠"), card("4♦") }  // Fives full of Fours
+        };
+
+        int[] tripletRanks = {
+                Card.ACE_RANK, Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10, 9, 8, 7, 6, 5
+        };
+
+        int[] pairRanks = {
+                Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10, 9, 8, 7, 6, 5, 4
+        };
+
+        for (int handIndex = 0; handIndex < fullHouseHands.length; handIndex++) {
+            final Card[] hand = fullHouseHands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not Full House", bestHand instanceof FullHouse);
+            FullHouse fullHouse = (FullHouse) bestHand;
+            assertEquals("Wrong triplet rank", tripletRanks[handIndex], fullHouse.getTripletRank());
+            assertEquals("Wrong pair rank", pairRanks[handIndex], fullHouse.getPairRank());
+        }
+    }
 }
