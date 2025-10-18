@@ -1,5 +1,6 @@
 package com.example.pokermaster.hands;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class HighCard implements PokerHand {
     private final List<Integer> mSortedRanks;
 
     public HighCard(int rank1, int rank2, int rank3, int rank4, int rank5) {
-        mSortedRanks = List.of(rank1, rank2, rank3, rank4, rank5);
+        mSortedRanks = new ArrayList<>(List.of(rank1, rank2, rank3, rank4, rank5));
         mSortedRanks.sort(Comparator.reverseOrder());
     }
 
