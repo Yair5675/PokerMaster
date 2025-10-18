@@ -149,4 +149,44 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong kicker rank", kickerRanks[handIndex], twoPair.getKickerRank());
         }
     }
+
+    @Test
+    public void testThreeOfAKindSanity() throws PokerHandCreatorException {
+        Card[][] threeOfAKindHands = {
+                { card("A♠"), card("A♦"), card("A♣"), card("K♠"), card("7♦") }, // Triplet Aces, kickers K,7
+                { card("K♥"), card("K♦"), card("K♣"), card("Q♠"), card("9♣") }, // Triplet Kings, kickers Q,9
+                { card("Q♠"), card("Q♦"), card("Q♣"), card("J♣"), card("8♦") }, // Triplet Queens, kickers J,8
+                { card("J♥"), card("J♦"), card("J♠"), card("10♣"), card("6♠") }, // Triplet Jacks, kickers 10,6
+                { card("10♦"), card("10♠"), card("10♥"), card("9♣"), card("4♠") }, // Triplet Tens, kickers 9,4
+                { card("9♠"), card("9♦"), card("9♥"), card("8♣"), card("5♦") }, // Triplet Nines, kickers 8,5
+                { card("8♦"), card("8♠"), card("8♣"), card("7♥"), card("3♣") }, // Triplet Eights, kickers 7,3
+                { card("7♣"), card("7♦"), card("7♠"), card("6♥"), card("2♠") }, // Triplet Sevens, kickers 6,2
+                { card("6♠"), card("6♦"), card("6♣"), card("5♥"), card("3♦") }, // Triplet Sixes, kickers 5,3
+                { card("5♣"), card("5♦"), card("5♥"), card("4♠"), card("2♥") }  // Triplet Fives, kickers 4,2
+        };
+
+        int[] tripletRanks = {
+                Card.ACE_RANK, Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10, 9, 8, 7, 6, 5
+        };
+
+        int[] highKickerRanks = {
+                Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10, 9, 8, 7, 6, 5, 4
+        };
+
+        int[] lowKickerRanks = {
+                7, 9, 8, 6, 4, 5, 3, 2, 3, 2
+        };
+
+        for (int handIndex = 0; handIndex < threeOfAKindHands.length; handIndex++) {
+            final Card[] hand = threeOfAKindHands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not Three Of A Kind", bestHand instanceof ThreeOfAKind);
+            ThreeOfAKind toakHand = (ThreeOfAKind) bestHand;
+            assertEquals("Wrong high kicker rank", highKickerRanks[handIndex], toakHand.getHighKickerRank());
+            assertEquals("Wrong low kicker rank", lowKickerRanks[handIndex], toakHand.getLowKickerRank());
+            assertEquals("Wrong triplet rank", tripletRanks[handIndex], toakHand.getMatchingCardRank());
+        }
+    }
 }
