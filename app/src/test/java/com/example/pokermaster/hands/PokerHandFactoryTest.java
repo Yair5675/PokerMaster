@@ -189,4 +189,34 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong triplet rank", tripletRanks[handIndex], toakHand.getMatchingCardRank());
         }
     }
+
+    @Test
+    public void testStraightSanity() throws PokerHandCreatorException {
+        Card[][] straightHands = {
+                { card("A♠"), card("2♦"), card("3♣"), card("4♥"), card("5♠") },  // 5-high straight
+                { card("2♣"), card("3♠"), card("4♦"), card("5♣"), card("6♥") },  // 6-high straight
+                { card("3♥"), card("4♠"), card("5♦"), card("6♣"), card("7♠") },  // 7-high straight
+                { card("4♣"), card("5♠"), card("6♥"), card("7♦"), card("8♣") },  // 8-high straight
+                { card("5♦"), card("6♣"), card("7♠"), card("8♥"), card("9♣") },  // 9-high straight
+                { card("6♠"), card("7♦"), card("8♣"), card("9♥"), card("10♠") }, // 10-high straight
+                { card("7♣"), card("8♠"), card("9♦"), card("10♥"), card("J♠") }, // Jack-high straight
+                { card("8♦"), card("9♣"), card("10♠"), card("J♥"), card("Q♣") }, // Queen-high straight
+                { card("9♠"), card("10♦"), card("J♣"), card("Q♥"), card("K♠") }, // King-high straight
+                { card("10♣"), card("J♦"), card("Q♠"), card("K♥"), card("A♦") }  // Ace-high straight
+        };
+
+        int[] straightHighRanks = {
+                5, 6, 7, 8, 9, 10, Card.JACK_RANK, Card.QUEEN_RANK, Card.KING_RANK, Card.ACE_RANK
+        };
+
+        for (int handIndex = 0; handIndex < straightHands.length; handIndex++) {
+            final Card[] hand = straightHands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not Straight", bestHand instanceof Straight);
+            Straight straight = (Straight) bestHand;
+            assertEquals("Wrong highest card rank", straightHighRanks[handIndex], straight.getHighestCardRank());
+        }
+    }
 }
