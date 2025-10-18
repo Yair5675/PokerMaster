@@ -9,6 +9,7 @@ import com.example.pokermaster.hands.creators.OnePairCreator;
 import com.example.pokermaster.hands.creators.PokerHandCreator;
 import com.example.pokermaster.hands.creators.RoyalFlushCreator;
 import com.example.pokermaster.hands.creators.StraightCreator;
+import com.example.pokermaster.hands.creators.StraightFlushCreator;
 import com.example.pokermaster.hands.creators.ThreeOfAKindCreator;
 import com.example.pokermaster.hands.creators.TwoPairCreator;
 import com.example.pokermaster.hands.creators.exceptions.PokerHandCreatorException;
@@ -41,7 +42,7 @@ public final class PokerHandFactory {
         // best to worst)
         sCreatorsPredicates = new LinkedHashMap<>();
         sCreatorsPredicates.put(HandProperties::isRoyalFlush, new RoyalFlushCreator());
-        sCreatorsPredicates.put(HandProperties::isStraightFlush, new StraightCreator());
+        sCreatorsPredicates.put(HandProperties::isStraightFlush, new StraightFlushCreator());
         sCreatorsPredicates.put(HandProperties::isFourOfAKind, new FourOfAKindCreator());
         sCreatorsPredicates.put(HandProperties::isFullHouse, new FullHouseCreator());
         sCreatorsPredicates.put(HandProperties::isFlush, new FlushCreator());
