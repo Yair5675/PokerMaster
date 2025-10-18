@@ -351,4 +351,22 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong quadruplet rank", straightFlushHighRanks[handIndex], straightFlush.getHighestCardRank());
         }
     }
+
+    @Test
+    public void testRoyalFlushSanity() throws PokerHandCreatorException {
+        Card[][] royalFlushHands = {
+                { card("10♠"), card("J♠"), card("Q♠"), card("K♠"), card("A♠") }, // Spades
+                { card("10♥"), card("J♥"), card("Q♥"), card("K♥"), card("A♥") }, // Hearts
+                { card("10♦"), card("J♦"), card("Q♦"), card("K♦"), card("A♦") }, // Diamonds
+                { card("10♣"), card("J♣"), card("Q♣"), card("K♣"), card("A♣") }  // Clubs
+        };
+
+        for (Card[] royalFlushHand : royalFlushHands) {
+            PokerHand bestHand = PokerHandFactory.createBestHand(
+                    royalFlushHand[0], royalFlushHand[1], royalFlushHand[2], royalFlushHand[3],
+                    royalFlushHand[4]
+            );
+            assertTrue("Best hand was not Royal Flush", bestHand instanceof RoyalFlush);
+        }
+    }
 }
