@@ -109,4 +109,44 @@ public class PokerHandFactoryTest {
             assertEquals("Kicker ranks weren't sorted correctly", sortedKickersRanks.get(handIndex), onePair.getSortedKickersRanks());
         }
     }
+
+    @Test
+    public void testTwoPairSanity() throws PokerHandCreatorException {
+        final Card[][] twoPairHands = {
+                { card("A♠"),  card("A♦"),  card("K♣"),  card("K♥"),  card("7♠") }, // Aces & Kings, kicker 7
+                { card("Q♣"),  card("Q♥"),  card("J♦"),  card("J♠"),  card("5♣") }, // Queens & Jacks, kicker 5
+                { card("10♠"), card("10♦"), card("9♥"),  card("9♣"),  card("4♠") }, // Tens & Nines, kicker 4
+                { card("8♦"),  card("8♠"),  card("7♥"),  card("7♣"),  card("3♦") }, // Eights & Sevens, kicker 3
+                { card("6♣"),  card("6♥"),  card("5♦"),  card("5♠"),  card("2♣") }, // Sixes & Fives, kicker 2
+                { card("K♦"),  card("K♠"),  card("Q♠"),  card("Q♦"),  card("9♥") }, // Kings & Queens, kicker 9
+                { card("J♣"),  card("J♦"),  card("10♥"), card("10♣"), card("6♠") }, // Jacks & Tens, kicker 6
+                { card("9♠"),  card("9♦"),  card("8♣"),  card("8♥"),  card("4♦") }, // Nines & Eights, kicker 4
+                { card("7♣"),  card("7♦"),  card("6♠"),  card("6♥"),  card("3♣") }, // Sevens & Sixes, kicker 3
+                { card("5♦"),  card("5♣"),  card("4♥"),  card("4♠"),  card("A♦") }  // Fives & Fours, kicker Ace
+        };
+
+        int[] highPairRanks = {
+                Card.ACE_RANK, Card.QUEEN_RANK, 10, 8, 6, Card.KING_RANK, Card.JACK_RANK, 9, 7, 5
+        };
+
+        int[] lowPairRanks = {
+                Card.KING_RANK, Card.JACK_RANK, 9, 7, 5, Card.QUEEN_RANK, 10, 8, 6, 4
+        };
+
+        int[] kickerRanks = {
+                7, 5, 4, 3, 2, 9, 6, 4, 3, Card.ACE_RANK
+        };
+
+        for (int handIndex = 0; handIndex < twoPairHands.length; handIndex++) {
+            final Card[] hand = twoPairHands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not Two Pair", bestHand instanceof TwoPair);
+            TwoPair twoPair = (TwoPair) bestHand;
+            assertEquals("Wrong high pair rank", highPairRanks[handIndex], twoPair.getHighPairRank());
+            assertEquals("Wrong low pair rank", lowPairRanks[handIndex], twoPair.getLowPairRank());
+            assertEquals("Wrong kicker rank", kickerRanks[handIndex], twoPair.getKickerRank());
+        }
+    }
 }

@@ -10,7 +10,7 @@ A reference checklist to ensure thorough coverage of poker hand evaluation logic
 
 * [X] High Card (no pairs, no straights, no flushes)
 * [X] One Pair (exactly one pair, no better hand)
-* [ ] Two Pair (exactly two distinct pairs, not three of a kind / full house)
+* [X] Two Pair (exactly two distinct pairs, not three of a kind / full house)
 * [ ] Three of a Kind (exactly three, not full house)
 * [ ] Straight (all suits, Ace both low `A-2-3-4-5` and high `10-J-Q-K-A`)
 * [ ] Flush (all suits, no straight)
