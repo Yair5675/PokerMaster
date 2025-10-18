@@ -43,16 +43,17 @@ public class ThreeOfAKindCreator implements PokerHandCreator {
         int tripletRank = -1;
 
         for (Map.Entry<Integer, Integer> rankToRepetitions : properties.getRankToRepetitions().entrySet()) {
-            final int rank = rankToRepetitions.getKey(), repetitions = rankToRepetitions.getValue();
+            int rank = rankToRepetitions.getKey(), repetitions = rankToRepetitions.getValue();
+            if (repetitions >= TRIPLET_REPETITIONS) {
+                tripletRank = rank;
+                repetitions -= TRIPLET_REPETITIONS;
+            }
+
             // Use for loop in case there are more than 3 repetitions and the remainder should be
             // considered kickers
-            for (int i = 1; i < repetitions; i++) {
-                if (repetitions < TRIPLET_REPETITIONS || i < TRIPLET_REPETITIONS)
-                    kickers[kickerIndex++] = rank;
-                else {
-                    tripletRank = rank;
-                    break;
-                }
+            while (kickerIndex < kickers.length && repetitions > 0) {
+                kickers[kickerIndex++] = rank;
+                repetitions--;
             }
         }
 
