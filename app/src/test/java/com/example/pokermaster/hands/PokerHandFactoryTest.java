@@ -322,4 +322,34 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong kicker rank", kickerRanks[handIndex], fourOfAKind.getKickerRank());
         }
     }
+
+    @Test
+    public void testStraightFlushSanity() throws PokerHandCreatorException {
+        Card[][] hands = {
+                { card("A♠"), card("2♠"), card("3♠"), card("4♠"), card("5♠") },  // 5-high straight flush
+                { card("2♥"), card("3♥"), card("4♥"), card("5♥"), card("6♥") },  // 6-high straight flush
+                { card("3♦"), card("4♦"), card("5♦"), card("6♦"), card("7♦") },  // 7-high straight flush
+                { card("4♣"), card("5♣"), card("6♣"), card("7♣"), card("8♣") },  // 8-high straight flush
+                { card("5♠"), card("6♠"), card("7♠"), card("8♠"), card("9♠") },  // 9-high straight flush
+                { card("6♥"), card("7♥"), card("8♥"), card("9♥"), card("10♥") }, // 10-high straight flush
+                { card("7♦"), card("8♦"), card("9♦"), card("10♦"), card("J♦") }, // Jack-high straight flush
+                { card("8♣"), card("9♣"), card("10♣"), card("J♣"), card("Q♣") }, // Queen-high straight flush
+                { card("9♠"), card("10♠"), card("J♠"), card("Q♠"), card("K♠") }, // King-high straight flush
+                { card("10♥"), card("J♥"), card("Q♥"), card("K♥"), card("A♥") }  // Ace-high straight flush
+        };
+
+        int[] straightFlushHighRanks = {
+                5, 6, 7, 8, 9, 10, Card.JACK_RANK, Card.QUEEN_RANK, Card.KING_RANK, Card.ACE_RANK
+        };
+
+        for (int handIndex = 0; handIndex < hands.length; handIndex++) {
+            final Card[] hand = hands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not Straight Flush", bestHand instanceof StraightFlush);
+            StraightFlush straightFlush = (StraightFlush) bestHand;
+            assertEquals("Wrong quadruplet rank", straightFlushHighRanks[handIndex], straightFlush.getHighestCardRank());
+        }
+    }
 }
