@@ -285,4 +285,41 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong pair rank", pairRanks[handIndex], fullHouse.getPairRank());
         }
     }
+
+    @Test
+    public void testFourOfAKind() throws PokerHandCreatorException {
+        Card[][] hands = {
+                { card("A♠"), card("A♦"), card("A♣"), card("A♥"), card("K♠") }, // Quad Aces, kicker K
+                { card("K♣"), card("K♥"), card("K♦"), card("K♠"), card("Q♠") }, // Quad Kings, kicker Q
+                { card("Q♠"), card("Q♦"), card("Q♣"), card("Q♥"), card("J♣") }, // Quad Queens, kicker J
+                { card("J♥"), card("J♦"), card("J♠"), card("J♣"), card("10♠") }, // Quad Jacks, kicker 10
+                { card("10♣"), card("10♦"), card("10♥"), card("10♠"), card("9♣") }, // Quad Tens, kicker 9
+                { card("9♠"), card("9♦"), card("9♣"), card("9♥"), card("8♣") }, // Quad Nines, kicker 8
+                { card("8♦"), card("8♣"), card("8♠"), card("8♥"), card("7♣") }, // Quad Eights, kicker 7
+                { card("7♣"), card("7♦"), card("7♠"), card("7♥"), card("6♠") }, // Quad Sevens, kicker 6
+                { card("6♠"), card("6♦"), card("6♣"), card("6♥"), card("5♣") }, // Quad Sixes, kicker 5
+                { card("5♣"), card("5♦"), card("5♥"), card("5♠"), card("4♦") }  // Quad Fives, kicker 4
+        };
+
+        int[] quadrupletRanks = {
+                Card.ACE_RANK, Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10,
+                9, 8, 7, 6, 5
+        };
+
+        int[] kickerRanks = {
+                Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10, 9,
+                8, 7, 6, 5, 4
+        };
+
+        for (int handIndex = 0; handIndex < hands.length; handIndex++) {
+            final Card[] hand = hands[handIndex];
+            final PokerHand bestHand = PokerHandFactory.createBestHand(
+                    hand[0], hand[1], hand[2], hand[3], hand[4]
+            );
+            assertTrue("Best hand was not Four Of A Kind", bestHand instanceof FourOfAKind);
+            FourOfAKind fourOfAKind = (FourOfAKind) bestHand;
+            assertEquals("Wrong quadruplet rank", quadrupletRanks[handIndex], fourOfAKind.getMatchingCardRank());
+            assertEquals("Wrong kicker rank", kickerRanks[handIndex], fourOfAKind.getKickerRank());
+        }
+    }
 }
