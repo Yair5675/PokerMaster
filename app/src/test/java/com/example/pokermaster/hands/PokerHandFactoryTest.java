@@ -1,11 +1,12 @@
 package com.example.pokermaster.hands;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.example.pokermaster.cards.Card;
 import com.example.pokermaster.cards.Suit;
-import com.example.pokermaster.hands.creators.exceptions.PokerHandCreatorException;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class PokerHandFactoryTest {
 
 
     @Test
-    public void testHighCardSanity() throws PokerHandCreatorException {
+    public void testHighCardSanity() {
         final Card[][] highCardHands = {
                 { card("A♠"),  card("9♥"),  card("7♦"),  card("4♣"),  card("2♠") },
                 { card("K♦"),  card("J♣"),  card("9♠"),  card("6♥"),  card("3♦") },
@@ -68,7 +69,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testOnePairSanity() throws PokerHandCreatorException {
+    public void testOnePairSanity() {
         final Card[][] onePairHands = {
             { card("A♠"),  card("A♦"),  card("9♥"),  card("6♣"),  card("3♠") }, // Pair of Aces
             { card("K♣"),  card("K♥"),  card("10♦"), card("8♠"),  card("4♣") }, // Pair of Kings
@@ -111,7 +112,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testTwoPairSanity() throws PokerHandCreatorException {
+    public void testTwoPairSanity() {
         final Card[][] twoPairHands = {
                 { card("A♠"),  card("A♦"),  card("K♣"),  card("K♥"),  card("7♠") }, // Aces & Kings, kicker 7
                 { card("Q♣"),  card("Q♥"),  card("J♦"),  card("J♠"),  card("5♣") }, // Queens & Jacks, kicker 5
@@ -151,7 +152,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testThreeOfAKindSanity() throws PokerHandCreatorException {
+    public void testThreeOfAKindSanity() {
         Card[][] threeOfAKindHands = {
                 { card("A♠"), card("A♦"), card("A♣"), card("K♠"), card("7♦") }, // Triplet Aces, kickers K,7
                 { card("K♥"), card("K♦"), card("K♣"), card("Q♠"), card("9♣") }, // Triplet Kings, kickers Q,9
@@ -191,7 +192,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testStraightSanity() throws PokerHandCreatorException {
+    public void testStraightSanity() {
         Card[][] straightHands = {
                 { card("A♠"), card("2♦"), card("3♣"), card("4♥"), card("5♠") },  // 5-high straight
                 { card("2♣"), card("3♠"), card("4♦"), card("5♣"), card("6♥") },  // 6-high straight
@@ -221,7 +222,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testFlushSanity() throws PokerHandCreatorException {
+    public void testFlushSanity() {
         Card[][] hands = {
                 { card("A♠"), card("10♠"), card("8♠"), card("5♠"), card("2♠") },
                 { card("K♥"), card("J♥"), card("9♥"), card("6♥"), card("3♥") },
@@ -252,7 +253,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testFullHouseSanity() throws PokerHandCreatorException {
+    public void testFullHouseSanity() {
         Card[][] fullHouseHands = {
                 { card("A♠"), card("A♦"), card("A♣"), card("K♠"), card("K♦") }, // Aces full of Kings
                 { card("K♣"), card("K♥"), card("K♦"), card("Q♠"), card("Q♥") }, // Kings full of Queens
@@ -287,7 +288,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testFourOfAKind() throws PokerHandCreatorException {
+    public void testFourOfAKind() {
         Card[][] hands = {
                 { card("A♠"), card("A♦"), card("A♣"), card("A♥"), card("K♠") }, // Quad Aces, kicker K
                 { card("K♣"), card("K♥"), card("K♦"), card("K♠"), card("Q♠") }, // Quad Kings, kicker Q
@@ -324,7 +325,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testStraightFlushSanity() throws PokerHandCreatorException {
+    public void testStraightFlushSanity() {
         Card[][] hands = {
                 { card("A♠"), card("2♠"), card("3♠"), card("4♠"), card("5♠") },  // 5-high straight flush
                 { card("2♥"), card("3♥"), card("4♥"), card("5♥"), card("6♥") },  // 6-high straight flush
@@ -353,7 +354,7 @@ public class PokerHandFactoryTest {
     }
 
     @Test
-    public void testRoyalFlushSanity() throws PokerHandCreatorException {
+    public void testRoyalFlushSanity() {
         Card[][] royalFlushHands = {
                 { card("10♠"), card("J♠"), card("Q♠"), card("K♠"), card("A♠") }, // Spades
                 { card("10♥"), card("J♥"), card("Q♥"), card("K♥"), card("A♥") }, // Hearts
