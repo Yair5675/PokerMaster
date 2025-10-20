@@ -63,15 +63,18 @@ public final class PokerHandFactory {
      * @param card4 Fourth card of the hand (order is meaningless though).
      * @param card5 Fifth card of the hand (order is meaningless though).
      * @return The best Poker Hand that can be made from these five cards.
-     * @throws PokerHandCreatorException If any exception occurred while creating the best hand
-     *                                   using the given hand.
-     *                                   TODO: Consider wrapping this in a factory exception maybe?
-     * @throws IllegalStateException If somehow the default predicate of {@link HighCardCreator}
-     *                               didn't catch the default case and an unreachable point of code
-     *                               was reached (this should NEVER be happening. Probably some
-     *                               malicious reflection magic is involved).
+     * @throws AssertionError If an internal invariant is violated.
+     *                        This can occur in two cases:
+     *                        <ul>
+     *                          <li>If the default predicate of {@link HighCardCreator} somehow
+     *                              fails to catch the fallback case (which should be impossible
+     *                              without reflection or logic corruption).</li>
+     *                          <li>If a {@link PokerHandCreatorException} is unexpectedly thrown by
+     *                              a mapped creator despite its predicate matching — indicating a
+     *                              developer-side logic error.</li>
+     *                        </ul>
      */
-    public static PokerHand createBestHand(Card card1, Card card2, Card card3, Card card4, Card card5) throws PokerHandCreatorException {
+    public static PokerHand createBestHand(Card card1, Card card2, Card card3, Card card4, Card card5) {
         final List<Card> rawHand = new ArrayList<>(List.of(card1, card2, card3, card4, card5));
         rawHand.sort(Comparator.comparing(Card::getRank));
 
@@ -79,13 +82,20 @@ public final class PokerHandFactory {
         if (sCreatorsPredicates == null)
             initializeHandCreatorsMapping();
 
-        for (Map.Entry<Predicate<HandProperties>, PokerHandCreator> predicateToCreator : sCreatorsPredicates.entrySet()) {
-            final Predicate<HandProperties> handPredicate = predicateToCreator.getKey();
-            final PokerHandCreator creator = predicateToCreator.getValue();
-            if (handPredicate.test(handProperties))
-                return creator.create(rawHand, handProperties);
+        try {
+            for (Map.Entry<Predicate<HandProperties>, PokerHandCreator> predicateToCreator : sCreatorsPredicates.entrySet()) {
+                final Predicate<HandProperties> handPredicate = predicateToCreator.getKey();
+                final PokerHandCreator creator = predicateToCreator.getValue();
+                if (handPredicate.test(handProperties))
+                    return creator.create(rawHand, handProperties);
+            }
+        } catch (PokerHandCreatorException creationException) {
+            throw new AssertionError(
+                    "Hand creation predicate mapped to a creator that threw an exception",
+                    creationException
+            );
         }
-        throw new IllegalStateException(
+        throw new AssertionError(
                 "Unreachable code point reached - the default predicate of HighCardCreator wasn't reached somehow"
         );
     }
