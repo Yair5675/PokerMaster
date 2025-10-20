@@ -2,6 +2,8 @@ package com.example.pokermaster.hands;
 
 import com.example.pokermaster.cards.Card;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,6 +50,51 @@ public class HandProperties {
         mIsSameSuit = isSameSuit;
         mIsSequential = isSequential;
         mRankToRepetitions = rankToRepetitions;
+    }
+
+    /**
+     * Given a list of card sorted by their rank ascendingly, the function returns a
+     * {@link HandProperties} instance based on the cards.
+     * @param rankSortedHand A list of cards sorted according to their rank, from lowest to highest.
+     * @return A {@link HandProperties} object whose values are based on rankSortedHand.
+     * @apiNote It is the responsibility OF THE CALLER to ensure the list is sorted.
+     */
+    public static HandProperties computePropertiesFromSortedRawHand(List<Card> rankSortedHand) {
+        final Map<Integer, Integer> rankToRepetitions = new HashMap<>();
+        boolean isSameSuit = true;
+        boolean isSequential = true;
+
+        final int firstRank = rankSortedHand.get(0).getRank();
+        rankToRepetitions.put(firstRank, 1);
+
+        final boolean isLowAceStraightPossible = (
+                rankSortedHand.get(3).getRank() == 5 &&
+                rankSortedHand.get(4).getRank() == Card.ACE_RANK
+        );
+
+        int highCardRank = firstRank;
+
+        for (int i = 1; i < rankSortedHand.size(); i++) {
+            final Card currentCard = rankSortedHand.get(i);
+            final Card previousCard = rankSortedHand.get(i - 1);
+
+            highCardRank = Math.max(highCardRank, currentCard.getRank());
+            isSameSuit &= currentCard.getSuit() == previousCard.getSuit();
+            isSequential &= (
+                    currentCard.getRank() == previousCard.getRank() + 1 ||
+                    (previousCard.getRank() == 5 && isLowAceStraightPossible)
+            );
+            rankToRepetitions.put(
+                    currentCard.getRank(),
+                    rankToRepetitions.getOrDefault(currentCard.getRank(), 0) + 1
+            );
+        }
+
+        // In the case of a low-ace straight, the ace's rank should be considered '1':
+        if (isSequential && isLowAceStraightPossible)
+            highCardRank = 5;
+
+        return new HandProperties(highCardRank, isSameSuit, isSequential, rankToRepetitions);
     }
 
     @Override
