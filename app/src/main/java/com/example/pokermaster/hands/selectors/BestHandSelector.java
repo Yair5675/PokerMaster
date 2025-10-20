@@ -3,6 +3,7 @@ package com.example.pokermaster.hands.selectors;
 import com.example.pokermaster.cards.Card;
 import com.example.pokermaster.cards.HoleCards;
 import com.example.pokermaster.hands.PokerHand;
+import com.example.pokermaster.hands.selectors.exceptions.BestHandSelectorException;
 
 import java.util.List;
 
@@ -31,6 +32,10 @@ public interface BestHandSelector {
      * @throws IllegalArgumentException Every implementation should throw this exception if the
      *                                  number of community cards given isn't
      *                                  {@link BestHandSelector#EXPECTED_COMMUNITY_CARDS_COUNT}.
+     * @throws BestHandSelectorException If the implementing class fails to get the best hand for
+     *                                   any reason. Implementing classes should wrap their errors
+     *                                   with subclasses of this exception to ensure users can catch
+     *                                   them.
      */
-    PokerHand getBestHand(HoleCards holeCards, List<Card> communityCards);
+    PokerHand getBestHand(HoleCards holeCards, List<Card> communityCards) throws BestHandSelectorException;
 }
