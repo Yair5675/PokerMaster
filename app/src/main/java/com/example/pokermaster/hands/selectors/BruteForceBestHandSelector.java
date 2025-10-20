@@ -4,8 +4,6 @@ import com.example.pokermaster.cards.Card;
 import com.example.pokermaster.cards.HoleCards;
 import com.example.pokermaster.hands.PokerHand;
 import com.example.pokermaster.hands.PokerHandFactory;
-import com.example.pokermaster.hands.creators.exceptions.PokerHandCreatorException;
-import com.example.pokermaster.hands.selectors.exceptions.BestHandSelectorException;
 
 import java.util.List;
 
@@ -27,11 +25,9 @@ public class BruteForceBestHandSelector implements BestHandSelector {
      * @return The best poker hand that can be made out of the given 7.
      * @throws IllegalArgumentException If the number of community cards given isn't
      *                                  {@link BestHandSelector#EXPECTED_COMMUNITY_CARDS_COUNT}.
-     * @throws BestHandSelectorException If creating a poker hand out of any of the 5-card
-     *                                   combination results in a {@link PokerHandCreatorException}
      */
     @Override
-    public PokerHand getBestHand(HoleCards holeCards, List<Card> communityCards) throws BestHandSelectorException {
+    public PokerHand getBestHand(HoleCards holeCards, List<Card> communityCards) {
         if (communityCards.size() != EXPECTED_COMMUNITY_CARDS_COUNT) {
             throw new IllegalArgumentException(String.format(
                     "Expected %d community cards, got %d instead",
@@ -56,17 +52,13 @@ public class BruteForceBestHandSelector implements BestHandSelector {
                 for (int card3 = card2 + 1; card3 < cards.length; card3++) {
                     for (int card4 = card3 + 1; card4 < cards.length; card4++) {
                         for (int card5 = card4 + 1; card5 < cards.length; card5++) {
-                            try {
-                                currentHand = PokerHandFactory.createBestHand(
-                                        cards[card1],
-                                        cards[card2],
-                                        cards[card3],
-                                        cards[card4],
-                                        cards[card5]
-                                );
-                            } catch (PokerHandCreatorException creationException) {
-                                throw new BestHandSelectorException(creationException);
-                            }
+                            currentHand = PokerHandFactory.createBestHand(
+                                    cards[card1],
+                                    cards[card2],
+                                    cards[card3],
+                                    cards[card4],
+                                    cards[card5]
+                            );
                             if (bestHand == null || currentHand.isBetterThan(bestHand))
                                 bestHand = currentHand;
                         }
