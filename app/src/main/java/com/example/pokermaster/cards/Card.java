@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 /**
  * Represents a single card in a poker game.
  */
-public class Card {
+public class Card implements Comparable<Card> {
     private static final String TAG = Card.class.getCanonicalName();
 
     public static final int MAX_RANK = 14;
@@ -131,5 +131,22 @@ public class Card {
         final String rankSymbol = getRankSymbol();
         final String suitSymbol = mSuit.toString();
         return TO_STRING_TEMPLATE.replace(RANK_TAG, rankSymbol).replace(SUIT_TAG, suitSymbol);
+    }
+
+    /**
+     * Compares one {@link Card} instance to another.
+     * <p>
+     *     The comparison is made first based on the card's rank (ace high), and then on its
+     *     {@link Suit suit} (based on it's {@link Enum#ordinal()} value).
+     * </p>
+     * @param other The card compared to this one.
+     * @return An integer value which adheres to the {@link Comparable} interface's instructions.
+     */
+    @Override
+    public int compareTo(@NonNull Card other) {
+        final int rankComparison = Integer.compare(mRank, other.mRank);
+        if (rankComparison != 0)
+            return rankComparison;
+        return Integer.compare(mSuit.ordinal(), other.mSuit.ordinal());
     }
 }
