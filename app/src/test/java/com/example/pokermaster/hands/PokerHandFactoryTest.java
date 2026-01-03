@@ -346,6 +346,16 @@ public class PokerHandFactoryTest {
             FourOfAKind fourOfAKind = (FourOfAKind) bestHand;
             assertEquals("Wrong quadruplet rank", quadrupletRanks[handIndex], fourOfAKind.getMatchingCardRank());
             assertEquals("Wrong kicker rank", kickerRanks[handIndex], fourOfAKind.getKickerRank());
+
+            final List<Card> fourOfAKindCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, fourOfAKindCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("FourOfAKind#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 

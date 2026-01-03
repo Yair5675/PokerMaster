@@ -2,14 +2,20 @@ package com.example.pokermaster.hands;
 
 import androidx.annotation.NonNull;
 
+import com.example.pokermaster.cards.Card;
+
+import java.util.List;
+
 public class FourOfAKind implements PokerHand {
     private static final int HAND_RANK = 2;
     private final int mMatchingCardRank;
     private final int mKickerRank;
+    private final List<Card> mRawHand;
 
-    public FourOfAKind(int matchingCardRank, int kickerRank) {
+    public FourOfAKind(int matchingCardRank, int kickerRank, List<Card> rawHand) {
         mMatchingCardRank = matchingCardRank;
         mKickerRank = kickerRank;
+        mRawHand = rawHand;
     }
 
     public int getMatchingCardRank() {
@@ -42,5 +48,10 @@ public class FourOfAKind implements PokerHand {
         }
 
         return Integer.compare(getHandRanking(), pokerHand.getHandRanking());
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return mRawHand;
     }
 }

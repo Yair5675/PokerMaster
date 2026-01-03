@@ -58,6 +58,6 @@ public class FourOfAKindCreator implements PokerHandCreator {
             throw new MissingRankRepetitionsException(
                     "Didn't find kicker rank in Four-Of-A-Kind hand properties");
 
-        return new FourOfAKind(quadrupletRank, kickerRank);
+        return new FourOfAKind(quadrupletRank, kickerRank, rawHand);
     }
 }
