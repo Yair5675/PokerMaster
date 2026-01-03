@@ -433,6 +433,16 @@ public class PokerHandFactoryTest {
                     royalFlushHand[4]
             );
             assertTrue("Best hand was not Royal Flush", bestHand instanceof RoyalFlush);
+
+            final List<Card> royalFlushCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(royalFlushHand, royalFlushCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("RoyalFlush#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 }
