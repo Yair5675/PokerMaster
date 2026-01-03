@@ -183,6 +183,16 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong high pair rank", highPairRanks[handIndex], twoPair.getHighPairRank());
             assertEquals("Wrong low pair rank", lowPairRanks[handIndex], twoPair.getLowPairRank());
             assertEquals("Wrong kicker rank", kickerRanks[handIndex], twoPair.getKickerRank());
+
+            final List<Card> twoPairCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, twoPairCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("TwoPair#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 
