@@ -223,6 +223,16 @@ public class PokerHandFactoryTest {
             assertEquals("Wrong high kicker rank", highKickerRanks[handIndex], toakHand.getHighKickerRank());
             assertEquals("Wrong low kicker rank", lowKickerRanks[handIndex], toakHand.getLowKickerRank());
             assertEquals("Wrong triplet rank", tripletRanks[handIndex], toakHand.getMatchingCardRank());
+
+            final List<Card> threeOfAKindCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, threeOfAKindCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("ThreeOfAKind#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 

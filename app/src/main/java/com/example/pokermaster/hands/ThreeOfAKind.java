@@ -2,6 +2,9 @@ package com.example.pokermaster.hands;
 
 import androidx.annotation.NonNull;
 
+import com.example.pokermaster.cards.Card;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -11,11 +14,13 @@ public class ThreeOfAKind implements PokerHand {
     private final int mMatchingCardRank;
     private final int mLowKickerRank;
     private final int mHighKickerRank;
+    private final List<Card> mRawHand;
 
-    public ThreeOfAKind(int matchingCardRank, int kicker1, int kicker2) {
+    public ThreeOfAKind(int matchingCardRank, int kicker1, int kicker2, List<Card> rawHand) {
         mMatchingCardRank = matchingCardRank;
         mLowKickerRank = Math.min(kicker1, kicker2);
         mHighKickerRank = Math.max(kicker1, kicker2);
+        mRawHand = rawHand;
     }
 
     public int getHighKickerRank() {
@@ -33,6 +38,11 @@ public class ThreeOfAKind implements PokerHand {
     @Override
     public int getHandRanking() {
         return HAND_RANK;
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return mRawHand;
     }
 
     @Override
