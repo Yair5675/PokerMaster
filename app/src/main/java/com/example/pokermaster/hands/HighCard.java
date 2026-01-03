@@ -1,21 +1,28 @@
 package com.example.pokermaster.hands;
 
+import com.example.pokermaster.cards.Card;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class HighCard implements PokerHand {
     private static final int HAND_RANK = 9;
-    private final List<Integer> mSortedRanks;
+    private final List<Card> mSortedCards;
 
-    public HighCard(int rank1, int rank2, int rank3, int rank4, int rank5) {
-        mSortedRanks = new ArrayList<>(List.of(rank1, rank2, rank3, rank4, rank5));
-        mSortedRanks.sort(Comparator.reverseOrder());
+    public HighCard(List<Card> rawHand) {
+        mSortedCards = new ArrayList<>(rawHand);
+        mSortedCards.sort(Comparator.comparing(card -> -card.getRank()));
     }
 
     @Override
     public int getHandRanking() {
         return HAND_RANK;
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return mSortedCards;
     }
 
     @Override
@@ -25,8 +32,8 @@ public class HighCard implements PokerHand {
         if (pokerHand instanceof HighCard) {
             final HighCard other = (HighCard) pokerHand;
             int comparison;
-            for (int i = 0; i < mSortedRanks.size(); i++) {
-                comparison = Integer.compare(other.mSortedRanks.get(i), mSortedRanks.get(i));
+            for (int i = 0; i < mSortedCards.size(); i++) {
+                comparison = Integer.compare(other.mSortedCards.get(i).getRank(), mSortedCards.get(i).getRank());
                 if (comparison != 0)
                     return comparison;
             }

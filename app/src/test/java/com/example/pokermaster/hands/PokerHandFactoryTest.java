@@ -80,6 +80,16 @@ public class PokerHandFactoryTest {
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
             assertTrue("Best hand was not High Card", bestHand instanceof HighCard);
+
+            final List<Card> highCardCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, highCardCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("HighCard#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 

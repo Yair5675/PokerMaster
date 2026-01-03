@@ -26,12 +26,6 @@ public class HighCardCreator implements PokerHandCreator {
             throw new InvalidHandSizeException(String.format(
                     "Expected %d cards in raw hand, got %d", PokerHand.HAND_SIZE, rawHand.size()
             ));
-        return new HighCard(
-                rawHand.get(0).getRank(),
-                rawHand.get(1).getRank(),
-                rawHand.get(2).getRank(),
-                rawHand.get(3).getRank(),
-                rawHand.get(4).getRank()
-        );
+        return new HighCard(rawHand);
     }
 }
