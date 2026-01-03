@@ -253,6 +253,16 @@ public class PokerHandFactoryTest {
             assertTrue("Best hand was not Straight", bestHand instanceof Straight);
             Straight straight = (Straight) bestHand;
             assertEquals("Wrong highest card rank", straightHighRanks[handIndex], straight.getHighestCardRank());
+
+            final List<Card> straightCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, straightCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("Straight#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 

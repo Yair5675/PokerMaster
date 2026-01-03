@@ -19,6 +19,6 @@ public class StraightCreator implements PokerHandCreator {
      */
     @Override
     public PokerHand create(List<Card> rawHand, HandProperties properties) {
-        return new Straight(properties.getHighCardRank());
+        return new Straight(rawHand);
     }
 }
