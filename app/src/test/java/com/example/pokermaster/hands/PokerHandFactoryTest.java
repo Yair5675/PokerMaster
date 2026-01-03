@@ -9,6 +9,7 @@ import com.example.pokermaster.cards.Suit;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class PokerHandFactoryTest {
@@ -42,6 +43,20 @@ public class PokerHandFactoryTest {
         if (suit == null || rank < Card.MIN_RANK)
             throw new IllegalArgumentException("Invalid card string given: " + card);
         return new Card(rank, suit);
+    }
+
+    /**
+     * Checks that every card in {@code expectedHand} also exists in {@code actualHand}.
+     * If a card is missing from {@code actualHand}, it is returned in the optional.
+     * If all cards exist, an empty optional is returned.
+     */
+    private Optional<Card> findMissingCard(Card[] expectedHand, List<Card> actualHand) {
+        for (Card expectedCard : expectedHand) {
+            if (!actualHand.contains(expectedCard)) {
+                return Optional.of(expectedCard);
+            }
+        }
+        return Optional.empty();
     }
 
 
@@ -249,6 +264,16 @@ public class PokerHandFactoryTest {
             assertTrue("Best hand was not Flush", bestHand instanceof Flush);
             Flush flush = (Flush) bestHand;
             assertEquals("Wrong matching suit", flushSuits[handIndex], flush.getMatchingSuit());
+
+            final List<Card> flushCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, flushCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("Flush#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 
