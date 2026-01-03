@@ -51,6 +51,6 @@ public class FullHouseCreator implements PokerHandCreator {
         if (pairRank < 0)
             throw new MissingRankRepetitionsException("Didn't find pair rank in hand properties");
 
-        return new FullHouse(tripletRank, pairRank);
+        return new FullHouse(tripletRank, pairRank, rawHand);
     }
 }

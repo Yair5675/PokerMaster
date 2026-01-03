@@ -2,14 +2,20 @@ package com.example.pokermaster.hands;
 
 import androidx.annotation.NonNull;
 
+import com.example.pokermaster.cards.Card;
+
+import java.util.List;
+
 public class FullHouse implements PokerHand {
     private static final int HAND_RANK = 3;
     private final int mTripletRank;
     private final int mPairRank;
+    private final List<Card> mRawHand;
 
-    public FullHouse(int tripletRank, int pairRank) {
+    public FullHouse(int tripletRank, int pairRank, List<Card> rawHand) {
         mTripletRank = tripletRank;
         mPairRank = pairRank;
+        mRawHand = rawHand;
     }
 
     public int getTripletRank() {
@@ -23,6 +29,11 @@ public class FullHouse implements PokerHand {
     @Override
     public int getHandRanking() {
         return HAND_RANK;
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return mRawHand;
     }
 
     @Override

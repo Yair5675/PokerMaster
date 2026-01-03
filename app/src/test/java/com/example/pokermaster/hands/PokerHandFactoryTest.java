@@ -309,6 +309,16 @@ public class PokerHandFactoryTest {
             FullHouse fullHouse = (FullHouse) bestHand;
             assertEquals("Wrong triplet rank", tripletRanks[handIndex], fullHouse.getTripletRank());
             assertEquals("Wrong pair rank", pairRanks[handIndex], fullHouse.getPairRank());
+
+            final List<Card> fullHouseCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, fullHouseCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("FullHouse#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 
