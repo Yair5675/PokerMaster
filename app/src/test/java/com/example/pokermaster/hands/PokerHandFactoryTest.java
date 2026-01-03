@@ -133,6 +133,16 @@ public class PokerHandFactoryTest {
             final OnePair onePair = (OnePair) bestHand;
             assertEquals("One Pair doesn't contain correct pair rank", pairRanks[handIndex], onePair.getPairRank());
             assertEquals("Kicker ranks weren't sorted correctly", sortedKickersRanks.get(handIndex), onePair.getSortedKickersRanks());
+
+            final List<Card> onePairCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, onePairCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("OnePair#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 

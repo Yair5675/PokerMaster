@@ -2,6 +2,8 @@ package com.example.pokermaster.hands;
 
 import androidx.annotation.NonNull;
 
+import com.example.pokermaster.cards.Card;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,8 +14,9 @@ public class OnePair implements PokerHand {
 
     private final int mPairRank;
     private final List<Integer> mSortedKickersRanks;
+    private final List<Card> mRawHand;
 
-    public OnePair(int pairRank, List<Integer> kickersRanks) {
+    public OnePair(int pairRank, List<Integer> kickersRanks, List<Card> rawHand) {
         if (kickersRanks.size() != EXPECTED_KICKERS_COUNT) {
             throw new IllegalArgumentException(String.format(
                     "Expected %d kickers, got %d",
@@ -25,6 +28,7 @@ public class OnePair implements PokerHand {
                 .stream()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
+        mRawHand = rawHand;
     }
 
     public int getPairRank() {
@@ -38,6 +42,11 @@ public class OnePair implements PokerHand {
     @Override
     public int getHandRanking() {
         return HAND_RANK;
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return mRawHand;
     }
 
     @Override
