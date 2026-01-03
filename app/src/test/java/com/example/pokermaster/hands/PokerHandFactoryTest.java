@@ -425,6 +425,16 @@ public class PokerHandFactoryTest {
             assertTrue("Best hand was not Straight Flush", bestHand instanceof StraightFlush);
             StraightFlush straightFlush = (StraightFlush) bestHand;
             assertEquals("Wrong quadruplet rank", straightFlushHighRanks[handIndex], straightFlush.getHighestCardRank());
+
+            final List<Card> straightFlushCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, straightFlushCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    String.format("StraightFlush#getCards missing card %s", missingCardStr),
+                    missingCard.isEmpty()
+            );
         }
     }
 

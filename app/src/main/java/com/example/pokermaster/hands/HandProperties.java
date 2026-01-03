@@ -17,8 +17,8 @@ import java.util.Objects;
  * For this reason, when using the predicates, do so from strongest hand ranking to weakest.
  */
 public class HandProperties {
-    /* Rank of the highest card */
-    private final int mHighCardRank;
+    /* The highest card */
+    private final Card mHighCard;
 
     /* Whether all 5 cards have the same suit */
     private final boolean mIsSameSuit;
@@ -32,8 +32,8 @@ public class HandProperties {
 
     /**
      * Constructs a new instance of {@link HandProperties}.
-     * @param highCardRank The highest rank found in the hand (from {@link Card#MIN_RANK} to
-     *                     {@link Card#MAX_RANK} inclusively).
+     * @param highCard The card with the highest rank found in the hand (from {@link Card#MIN_RANK}
+     *                 to {@link Card#MAX_RANK} inclusively).
      * @param isSameSuit Whether all cards in the hand share the same
      *                   {@link com.example.pokermaster.cards.Suit Suit}.
      * @param isSequential Whether the ranks of all cards in the hand are sequential.
@@ -43,10 +43,10 @@ public class HandProperties {
      *                          mapping would contain an entry mapping {@link Card#QUEEN_RANK} to 3.
      */
     public HandProperties(
-            int highCardRank, boolean isSameSuit, boolean isSequential,
+            Card highCard, boolean isSameSuit, boolean isSequential,
             Map<Integer, Integer> rankToRepetitions
     ) {
-        mHighCardRank = highCardRank;
+        mHighCard = highCard;
         mIsSameSuit = isSameSuit;
         mIsSequential = isSequential;
         mRankToRepetitions = rankToRepetitions;
@@ -72,13 +72,11 @@ public class HandProperties {
                 rankSortedHand.get(4).getRank() == Card.ACE_RANK
         );
 
-        int highCardRank = firstRank;
 
         for (int i = 1; i < rankSortedHand.size(); i++) {
             final Card currentCard = rankSortedHand.get(i);
             final Card previousCard = rankSortedHand.get(i - 1);
 
-            highCardRank = Math.max(highCardRank, currentCard.getRank());
             isSameSuit &= currentCard.getSuit() == previousCard.getSuit();
             isSequential &= (
                     currentCard.getRank() == previousCard.getRank() + 1 ||
@@ -91,10 +89,11 @@ public class HandProperties {
         }
 
         // In the case of a low-ace straight, the ace's rank should be considered '1':
+        Card highCard = rankSortedHand.get(4);
         if (isSequential && isLowAceStraightPossible)
-            highCardRank = 5;
+            highCard = rankSortedHand.get(3);
 
-        return new HandProperties(highCardRank, isSameSuit, isSequential, rankToRepetitions);
+        return new HandProperties(highCard, isSameSuit, isSequential, rankToRepetitions);
     }
 
     @Override
@@ -102,7 +101,7 @@ public class HandProperties {
         if (!(other instanceof HandProperties)) return false;
         final HandProperties handProperties = (HandProperties) other;
 
-        final boolean sameHighRank = mHighCardRank == handProperties.mHighCardRank;
+        final boolean sameHighRank = mHighCard.getRank() == handProperties.mHighCard.getRank();
         final boolean sameSuitEquals = mIsSameSuit == handProperties.mIsSameSuit;
         final boolean sequentialEquals = mIsSequential == handProperties.mIsSequential;
         final boolean rankToRepetitionsEquals = mRankToRepetitions.equals(handProperties.mRankToRepetitions);
@@ -110,8 +109,8 @@ public class HandProperties {
         return sameHighRank && sameSuitEquals && sequentialEquals && rankToRepetitionsEquals;
     }
 
-    public int getHighCardRank() {
-        return mHighCardRank;
+    public Card getHighCard() {
+        return mHighCard;
     }
 
     public boolean isSameSuit() {
@@ -128,7 +127,7 @@ public class HandProperties {
 
     @Override
     public int hashCode() {
-        return Objects.hash(mHighCardRank, mIsSameSuit, mIsSequential, mRankToRepetitions);
+        return Objects.hash(mHighCard, mIsSameSuit, mIsSequential, mRankToRepetitions);
     }
 
     /**
@@ -136,7 +135,7 @@ public class HandProperties {
      * @return {@code true} if the hand is a Royal Flush.
      */
     public boolean isRoyalFlush() {
-        return mIsSameSuit && mIsSequential && mHighCardRank == Card.ACE_RANK;
+        return mIsSameSuit && mIsSequential && mHighCard.getRank() == Card.ACE_RANK;
     }
 
     /**

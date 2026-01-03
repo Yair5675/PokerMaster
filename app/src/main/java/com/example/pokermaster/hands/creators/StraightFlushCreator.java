@@ -19,6 +19,6 @@ public class StraightFlushCreator implements PokerHandCreator {
      */
     @Override
     public PokerHand create(List<Card> rawHand, HandProperties properties) {
-        return new StraightFlush(properties.getHighCardRank());
+        return new StraightFlush(properties.getHighCard());
     }
 }
