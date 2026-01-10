@@ -34,19 +34,23 @@ public class Card implements Comparable<Card> {
     private static final int DIAMOND_HASH = 0b10;
     private static final int CLUB_HASH = 0b11;
 
-    private final int mRank;
-    private final Suit mSuit;
+    private int mRank;
+    private Suit mSuit;
 
     public Card(int rank, Suit suit) {
+        validateRank(rank);
+
+        this.mRank = rank;
+        this.mSuit = suit;
+    }
+
+    private void validateRank(int rank) {
         if (rank > MAX_RANK || rank < MIN_RANK) {
             throw new IllegalArgumentException(String.format(
                     "Invalid rank, must be between %d and %d inclusively (got %d)",
                     MIN_RANK, MAX_RANK, rank
             ));
         }
-
-        this.mRank = rank;
-        this.mSuit = suit;
     }
 
     public int getRank() {
@@ -55,6 +59,15 @@ public class Card implements Comparable<Card> {
 
     public Suit getSuit() {
         return mSuit;
+    }
+
+    public void setRank(int newRank) {
+        validateRank(newRank);
+        mRank = newRank;
+    }
+
+    public void setSuit(Suit newSuit) {
+        mSuit = newSuit;
     }
 
     /**
