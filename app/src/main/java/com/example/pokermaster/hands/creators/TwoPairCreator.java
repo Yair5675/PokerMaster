@@ -61,6 +61,6 @@ public class TwoPairCreator implements PokerHandCreator {
             ));
         if (kickerRank < 0)
             throw new MissingRankRepetitionsException("Didn't find kicker rank");
-        return new TwoPair(pairs[0], pairs[1], kickerRank);
+        return new TwoPair(pairs[0], pairs[1], kickerRank, rawHand);
     }
 }

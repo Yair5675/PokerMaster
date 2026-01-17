@@ -63,6 +63,6 @@ public class ThreeOfAKindCreator implements PokerHandCreator {
             ));
         if (tripletRank < 0)
             throw new MissingRankRepetitionsException("Didn't find triplet ranking");
-        return new ThreeOfAKind(tripletRank, kickers[0], kickers[1]);
+        return new ThreeOfAKind(tripletRank, kickers[0], kickers[1], rawHand);
     }
 }

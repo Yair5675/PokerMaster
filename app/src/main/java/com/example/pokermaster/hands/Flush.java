@@ -1,5 +1,6 @@
 package com.example.pokermaster.hands;
 
+import com.example.pokermaster.cards.Card;
 import com.example.pokermaster.cards.Suit;
 
 import java.util.Collections;
@@ -51,5 +52,16 @@ public class Flush implements PokerHand {
             return 0;
         }
         return Integer.compare(getHandRanking(), pokerHand.getHandRanking());
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return List.of(
+                new Card(mSortedCardsRanks.get(0), mMatchingSuit),
+                new Card(mSortedCardsRanks.get(1), mMatchingSuit),
+                new Card(mSortedCardsRanks.get(2), mMatchingSuit),
+                new Card(mSortedCardsRanks.get(3), mMatchingSuit),
+                new Card(mSortedCardsRanks.get(4), mMatchingSuit)
+        );
     }
 }

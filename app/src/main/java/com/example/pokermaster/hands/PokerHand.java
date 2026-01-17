@@ -1,5 +1,9 @@
 package com.example.pokermaster.hands;
 
+import com.example.pokermaster.cards.Card;
+
+import java.util.List;
+
 /**
  * An abstraction over the type of hands in Texas hold 'em Poker.
  * <p>
@@ -19,6 +23,14 @@ public interface PokerHand extends Comparable<PokerHand> {
      * @return A number indicating the rank of the implementing poker hand class.
      */
     int getHandRanking();
+
+    /**
+     * Returns a list containing every card used in the current hand.
+     * The list's size should be exactly {@link PokerHand#HAND_SIZE} long.
+     * The list should ideally be immutable, so callers watch out.
+     * @return An immutable list with the hand's cards.
+     */
+    List<Card> getCards();
 
     /**
      * Checks if this hand is better than the given one.

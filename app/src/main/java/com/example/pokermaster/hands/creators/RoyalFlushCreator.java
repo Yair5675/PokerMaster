@@ -1,6 +1,7 @@
 package com.example.pokermaster.hands.creators;
 
 import com.example.pokermaster.cards.Card;
+import com.example.pokermaster.cards.Suit;
 import com.example.pokermaster.hands.HandProperties;
 import com.example.pokermaster.hands.PokerHand;
 import com.example.pokermaster.hands.RoyalFlush;
@@ -23,6 +24,7 @@ public class RoyalFlushCreator implements PokerHandCreator {
      */
     @Override
     public PokerHand create(List<Card> rawHand, HandProperties properties) {
-        return RoyalFlush.getInstance();
+        final Suit royalFlushSuit = rawHand.get(0).getSuit();
+        return new RoyalFlush(royalFlushSuit);
     }
 }

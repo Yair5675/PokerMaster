@@ -16,6 +16,17 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    testOptions {
+        unitTests.all {
+            // This is required to run JUnit 5 tests
+            useJUnitPlatform {
+                if (!project.hasProperty("includeExpensive")) {
+                    excludeTags "expensive"
+                }
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -34,7 +45,10 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
+
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.params
+    androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.espresso.core
+    testRuntimeOnly libs.junit.jupiter.engine
 }

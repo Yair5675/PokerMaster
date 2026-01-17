@@ -1,5 +1,7 @@
 package com.example.pokermaster.hands;
 
+import com.example.pokermaster.cards.Card;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -8,11 +10,13 @@ public class TwoPair implements PokerHand {
     private final int mHighPairRank;
     private final int mLowPairRank;
     private final int mKickerRank;
+    private final List<Card> mRawHand;
 
-    public TwoPair(int firstPairRank, int secondPairRank, int kickerRank) {
+    public TwoPair(int firstPairRank, int secondPairRank, int kickerRank, List<Card> rawHand) {
         mHighPairRank = Math.max(firstPairRank, secondPairRank);
         mLowPairRank = Math.min(firstPairRank, secondPairRank);
         mKickerRank = kickerRank;
+        mRawHand = rawHand;
     }
 
     public int getHighPairRank() {
@@ -30,6 +34,11 @@ public class TwoPair implements PokerHand {
     @Override
     public int getHandRanking() {
         return HAND_RANK;
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return mRawHand;
     }
 
     @Override

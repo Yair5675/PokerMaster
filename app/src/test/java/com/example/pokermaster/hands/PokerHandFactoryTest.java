@@ -1,14 +1,20 @@
 package com.example.pokermaster.hands;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.pokermaster.cards.Card;
 import com.example.pokermaster.cards.Suit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 
 public class PokerHandFactoryTest {
@@ -44,75 +50,120 @@ public class PokerHandFactoryTest {
         return new Card(rank, suit);
     }
 
-
-    @Test
-    public void testHighCardSanity() {
-        final Card[][] highCardHands = {
-                { card("A♠"),  card("9♥"),  card("7♦"),  card("4♣"),  card("2♠") },
-                { card("K♦"),  card("J♣"),  card("9♠"),  card("6♥"),  card("3♦") },
-                { card("Q♣"),  card("10♦"), card("8♠"),  card("5♥"),  card("2♣") },
-                { card("J♦"),  card("9♣"),  card("7♥"),  card("4♠"),  card("3♦") },
-                { card("10♠"), card("8♦"),  card("6♥"),  card("4♣"),  card("2♦") },
-                { card("9♥"),  card("7♠"),  card("5♦"),  card("3♣"),  card("2♥") },
-                { card("A♦"),  card("Q♠"),  card("8♥"),  card("5♣"),  card("3♦") },
-                { card("K♣"),  card("10♥"), card("9♦"),  card("6♠"),  card("4♥") },
-                { card("Q♦"),  card("J♠"),  card("8♣"),  card("6♥"),  card("3♠") },
-                { card("J♣"),  card("9♦"),  card("7♠"),  card("5♥"),  card("2♣") }
-        };
-
-        for (Card[] hand : highCardHands) {
-            final PokerHand bestHand = PokerHandFactory.createBestHand(
-                    hand[0], hand[1], hand[2], hand[3], hand[4]
-            );
-            assertTrue("Best hand was not High Card", bestHand instanceof HighCard);
-        }
+    private static Card[] hand(String c1, String c2, String c3, String c4, String c5) {
+        return new Card[] {card(c1), card(c2), card(c3), card(c4), card(c5)};
     }
 
-    @Test
-    public void testOnePairSanity() {
-        final Card[][] onePairHands = {
-            { card("A♠"),  card("A♦"),  card("9♥"),  card("6♣"),  card("3♠") }, // Pair of Aces
-            { card("K♣"),  card("K♥"),  card("10♦"), card("8♠"),  card("4♣") }, // Pair of Kings
-            { card("Q♦"),  card("Q♠"),  card("9♣"),  card("5♥"),  card("2♦") }, // Pair of Queens
-            { card("J♥"),  card("J♣"),  card("8♦"),  card("6♠"),  card("3♥") }, // Pair of Jacks
-            { card("10♣"), card("10♠"), card("7♦"),  card("5♥"),  card("4♠") }, // Pair of Tens
-            { card("9♦"),  card("9♠"),  card("8♣"),  card("6♥"),  card("2♦") }, // Pair of Nines
-            { card("8♠"),  card("8♦"),  card("7♥"),  card("5♣"),  card("3♠") }, // Pair of Eights
-            { card("7♣"),  card("7♠"),  card("9♦"),  card("6♥"),  card("4♣") }, // Pair of Sevens
-            { card("6♦"),  card("6♠"),  card("10♥"), card("8♣"),  card("2♥") }, // Pair of Sixes
-            { card("5♣"),  card("5♦"),  card("9♠"),  card("7♥"),  card("3♣") }  // Pair of Fives
-        };
-        final int[] pairRanks = {
-                Card.ACE_RANK, Card.KING_RANK, Card.QUEEN_RANK, Card.JACK_RANK, 10, 9, 8, 7, 6, 5
-        };
-        final List<List<Integer>> sortedKickersRanks = List.of(
-                List.of(9, 6, 3),
-                List.of(10, 8, 4),
-                List.of(9, 5, 2),
-                List.of(8, 6, 3),
-                List.of(7, 5, 4),
-                List.of(8, 6, 2),
-                List.of(7, 5, 3),
-                List.of(9, 6, 4),
-                List.of(10, 8, 2),
-                List.of(9, 7, 3)
-        );
-
-        for (int handIndex = 0; handIndex < onePairHands.length; handIndex++) {
-            final Card[] hand = onePairHands[handIndex];
-            final PokerHand bestHand = PokerHandFactory.createBestHand(
-                    hand[0], hand[1], hand[2], hand[3], hand[4]
-            );
-            assertTrue("Best hand was not One Pair", bestHand instanceof OnePair);
-
-            final OnePair onePair = (OnePair) bestHand;
-            assertEquals("One Pair doesn't contain correct pair rank", pairRanks[handIndex], onePair.getPairRank());
-            assertEquals("Kicker ranks weren't sorted correctly", sortedKickersRanks.get(handIndex), onePair.getSortedKickersRanks());
+    /**
+     * Checks that every card in {@code expectedHand} also exists in {@code actualHand}.
+     * If a card is missing from {@code actualHand}, it is returned in the optional.
+     * If all cards exist, an empty optional is returned.
+     */
+    private Optional<Card> findMissingCard(Card[] expectedHand, List<Card> actualHand) {
+        for (Card expectedCard : expectedHand) {
+            if (!actualHand.contains(expectedCard)) {
+                return Optional.of(expectedCard);
+            }
         }
+        return Optional.empty();
+    }
+
+    private static Stream<Arguments> highCardHands() {
+        return Stream.of(
+                Arguments.of((Object) hand("A♠", "9♥", "7♦", "4♣", "2♠")),
+                Arguments.of((Object) hand("K♦", "J♣", "9♠", "6♥", "3♦")),
+                Arguments.of((Object) hand("Q♣", "10♦", "8♠", "5♥", "2♣")),
+                Arguments.of((Object) hand("J♦", "9♣", "7♥", "4♠", "3♦")),
+                Arguments.of((Object) hand("10♠", "8♦", "6♥", "4♣", "2♦")),
+                Arguments.of((Object) hand("9♥", "7♠", "5♦", "3♣", "2♥")),
+                Arguments.of((Object) hand("A♦", "Q♠", "8♥", "5♣", "3♦")),
+                Arguments.of((Object) hand("K♣", "10♥", "9♦", "6♠", "4♥")),
+                Arguments.of((Object) hand("Q♦", "J♠", "8♣", "6♥", "3♠")),
+                Arguments.of((Object) hand("J♣", "9♦", "7♠", "5♥", "2♣"))
+        );
+    }
+
+    private static Stream<Arguments> onePairHands() {
+        return Stream.of(
+                Arguments.of(
+                        hand("A♠", "A♦", "9♥", "6♣", "3♠"), Card.ACE_RANK, List.of(9, 6, 3)
+                ),
+                Arguments.of(
+                        hand("K♣", "K♥", "10♦", "8♠", "4♣"), Card.KING_RANK, List.of(10, 8, 4)
+                ),
+                Arguments.of(
+                        hand("Q♦", "Q♠", "9♣", "5♥", "2♦"), Card.QUEEN_RANK, List.of(9, 5, 2)
+                ),
+                Arguments.of(
+                        hand("J♥", "J♣", "8♦", "6♠", "3♥"), Card.JACK_RANK, List.of(8, 6, 3)
+                ),
+                Arguments.of(
+                        hand("10♣", "10♠", "7♦", "5♥", "4♠"), 10, List.of(7, 5, 4)
+                ),
+                Arguments.of(
+                        hand("9♦", "9♠", "8♣", "6♥", "2♦"), 9, List.of(8, 6, 2)
+                ),
+                Arguments.of(
+                        hand("8♠", "8♦", "7♥", "5♣", "3♠"), 8, List.of(7, 5, 3)
+                ),
+                Arguments.of(
+                        hand("7♣", "7♠", "9♦", "6♥", "4♣"), 7, List.of(9, 6, 4)
+                ),
+                Arguments.of(
+                        hand("6♦", "6♠", "10♥", "8♣", "2♥"), 6, List.of(10, 8, 2)
+                ),
+                Arguments.of(
+                        hand("5♣", "5♦", "9♠", "7♥", "3♣"), 5, List.of(9, 7, 3)
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("highCardHands")
+    public void testHighCardSanity(Card[] hand) {
+        final PokerHand bestHand = PokerHandFactory.createBestHand(
+                hand[0], hand[1], hand[2], hand[3], hand[4]
+        );
+        assertInstanceOf(HighCard.class, bestHand, "Best hand was not High Card");
+
+        final List<Card> highCardCards = bestHand.getCards();
+        final Optional<Card> missingCard = findMissingCard(hand, highCardCards);
+        String missingCardStr = missingCard
+                .map(Object::toString)
+                .orElse("no missing card");
+        assertTrue(
+                missingCard.isEmpty(),
+                String.format("HighCard#getCards missing card %s", missingCardStr)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("onePairHands")
+    public void testOnePairSanity(Card[] hand, int pairRank, List<Integer> sortedKickersRanks)
+    {
+        final PokerHand bestHand = PokerHandFactory.createBestHand(
+                hand[0], hand[1], hand[2], hand[3], hand[4]
+        );
+        assertInstanceOf(OnePair.class, bestHand, "Best hand was not One Pair");
+
+        final OnePair onePair = (OnePair) bestHand;
+        assertEquals(pairRank, onePair.getPairRank(), "One Pair doesn't contain correct pair rank");
+        assertEquals(sortedKickersRanks, onePair.getSortedKickersRanks(), "Kicker ranks weren't sorted correctly");
+
+        final List<Card> onePairCards = bestHand.getCards();
+        final Optional<Card> missingCard = findMissingCard(hand, onePairCards);
+        String missingCardStr = missingCard
+                .map(Object::toString)
+                .orElse("no missing card");
+        assertTrue(
+                missingCard.isEmpty(),
+                String.format("OnePair#getCards missing card %s", missingCardStr)
+        );
     }
 
     @Test
     public void testTwoPairSanity() {
+        // TODO - make this parametrized when you feel like it (and the rest of the tests)
         final Card[][] twoPairHands = {
                 { card("A♠"),  card("A♦"),  card("K♣"),  card("K♥"),  card("7♠") }, // Aces & Kings, kicker 7
                 { card("Q♣"),  card("Q♥"),  card("J♦"),  card("J♠"),  card("5♣") }, // Queens & Jacks, kicker 5
@@ -143,11 +194,21 @@ public class PokerHandFactoryTest {
             final PokerHand bestHand = PokerHandFactory.createBestHand(
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
-            assertTrue("Best hand was not Two Pair", bestHand instanceof TwoPair);
+            assertInstanceOf(TwoPair.class, bestHand, "Best hand was not Two Pair");
             TwoPair twoPair = (TwoPair) bestHand;
-            assertEquals("Wrong high pair rank", highPairRanks[handIndex], twoPair.getHighPairRank());
-            assertEquals("Wrong low pair rank", lowPairRanks[handIndex], twoPair.getLowPairRank());
-            assertEquals("Wrong kicker rank", kickerRanks[handIndex], twoPair.getKickerRank());
+            assertEquals(highPairRanks[handIndex], twoPair.getHighPairRank(), "Wrong high pair rank");
+            assertEquals(lowPairRanks[handIndex], twoPair.getLowPairRank(), "Wrong low pair rank");
+            assertEquals(kickerRanks[handIndex], twoPair.getKickerRank(), "Wrong kicker rank");
+
+            final List<Card> twoPairCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, twoPairCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("TwoPair#getCards missing card %s", missingCardStr)
+            );
         }
     }
 
@@ -183,11 +244,21 @@ public class PokerHandFactoryTest {
             final PokerHand bestHand = PokerHandFactory.createBestHand(
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
-            assertTrue("Best hand was not Three Of A Kind", bestHand instanceof ThreeOfAKind);
+            assertInstanceOf(ThreeOfAKind.class, bestHand, "Best hand was not Three Of A Kind");
             ThreeOfAKind toakHand = (ThreeOfAKind) bestHand;
-            assertEquals("Wrong high kicker rank", highKickerRanks[handIndex], toakHand.getHighKickerRank());
-            assertEquals("Wrong low kicker rank", lowKickerRanks[handIndex], toakHand.getLowKickerRank());
-            assertEquals("Wrong triplet rank", tripletRanks[handIndex], toakHand.getMatchingCardRank());
+            assertEquals(highKickerRanks[handIndex], toakHand.getHighKickerRank(), "Wrong high kicker rank");
+            assertEquals(lowKickerRanks[handIndex], toakHand.getLowKickerRank(), "Wrong low kicker rank");
+            assertEquals(tripletRanks[handIndex], toakHand.getMatchingCardRank(), "Wrong triplet rank");
+
+            final List<Card> threeOfAKindCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, threeOfAKindCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("ThreeOfAKind#getCards missing card %s", missingCardStr)
+                        );
         }
     }
 
@@ -215,9 +286,19 @@ public class PokerHandFactoryTest {
             final PokerHand bestHand = PokerHandFactory.createBestHand(
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
-            assertTrue("Best hand was not Straight", bestHand instanceof Straight);
+            assertInstanceOf(Straight.class, bestHand, "Best hand was not Straight");
             Straight straight = (Straight) bestHand;
-            assertEquals("Wrong highest card rank", straightHighRanks[handIndex], straight.getHighestCardRank());
+            assertEquals(straightHighRanks[handIndex], straight.getHighestCardRank(), "Wrong highest card rank");
+
+            final List<Card> straightCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, straightCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("Straight#getCards missing card %s", missingCardStr)
+            );
         }
     }
 
@@ -246,9 +327,19 @@ public class PokerHandFactoryTest {
             final PokerHand bestHand = PokerHandFactory.createBestHand(
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
-            assertTrue("Best hand was not Flush", bestHand instanceof Flush);
+            assertInstanceOf(Flush.class, bestHand, "Best hand was not Flush");
             Flush flush = (Flush) bestHand;
-            assertEquals("Wrong matching suit", flushSuits[handIndex], flush.getMatchingSuit());
+            assertEquals(flushSuits[handIndex], flush.getMatchingSuit(), "Wrong matching suit");
+
+            final List<Card> flushCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, flushCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("Flush#getCards missing card %s", missingCardStr)
+            );
         }
     }
 
@@ -280,10 +371,20 @@ public class PokerHandFactoryTest {
             final PokerHand bestHand = PokerHandFactory.createBestHand(
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
-            assertTrue("Best hand was not Full House", bestHand instanceof FullHouse);
+            assertInstanceOf(FullHouse.class, bestHand, "Best hand was not Full House");
             FullHouse fullHouse = (FullHouse) bestHand;
-            assertEquals("Wrong triplet rank", tripletRanks[handIndex], fullHouse.getTripletRank());
-            assertEquals("Wrong pair rank", pairRanks[handIndex], fullHouse.getPairRank());
+            assertEquals(tripletRanks[handIndex], fullHouse.getTripletRank(), "Wrong triplet rank");
+            assertEquals(pairRanks[handIndex], fullHouse.getPairRank(), "Wrong pair rank");
+
+            final List<Card> fullHouseCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, fullHouseCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("FullHouse#getCards missing card %s", missingCardStr)
+            );
         }
     }
 
@@ -317,10 +418,20 @@ public class PokerHandFactoryTest {
             final PokerHand bestHand = PokerHandFactory.createBestHand(
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
-            assertTrue("Best hand was not Four Of A Kind", bestHand instanceof FourOfAKind);
+            assertInstanceOf(FourOfAKind.class, bestHand, "Best hand was not Four Of A Kind");
             FourOfAKind fourOfAKind = (FourOfAKind) bestHand;
-            assertEquals("Wrong quadruplet rank", quadrupletRanks[handIndex], fourOfAKind.getMatchingCardRank());
-            assertEquals("Wrong kicker rank", kickerRanks[handIndex], fourOfAKind.getKickerRank());
+            assertEquals(quadrupletRanks[handIndex], fourOfAKind.getMatchingCardRank(), "Wrong quadruplet rank");
+            assertEquals(kickerRanks[handIndex], fourOfAKind.getKickerRank(), "Wrong kicker rank");
+
+            final List<Card> fourOfAKindCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, fourOfAKindCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("FourOfAKind#getCards missing card %s", missingCardStr)
+            );
         }
     }
 
@@ -347,9 +458,19 @@ public class PokerHandFactoryTest {
             final PokerHand bestHand = PokerHandFactory.createBestHand(
                     hand[0], hand[1], hand[2], hand[3], hand[4]
             );
-            assertTrue("Best hand was not Straight Flush", bestHand instanceof StraightFlush);
+            assertInstanceOf(StraightFlush.class, bestHand, "Best hand was not Straight Flush");
             StraightFlush straightFlush = (StraightFlush) bestHand;
-            assertEquals("Wrong quadruplet rank", straightFlushHighRanks[handIndex], straightFlush.getHighestCardRank());
+            assertEquals(straightFlushHighRanks[handIndex], straightFlush.getHighestCardRank(), "Wrong quadruplet rank");
+
+            final List<Card> straightFlushCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(hand, straightFlushCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("StraightFlush#getCards missing card %s", missingCardStr)
+            );
         }
     }
 
@@ -367,7 +488,17 @@ public class PokerHandFactoryTest {
                     royalFlushHand[0], royalFlushHand[1], royalFlushHand[2], royalFlushHand[3],
                     royalFlushHand[4]
             );
-            assertTrue("Best hand was not Royal Flush", bestHand instanceof RoyalFlush);
+            assertInstanceOf(RoyalFlush.class, bestHand, "Best hand was not Royal Flush");
+
+            final List<Card> royalFlushCards = bestHand.getCards();
+            final Optional<Card> missingCard = findMissingCard(royalFlushHand, royalFlushCards);
+            String missingCardStr = missingCard
+                    .map(Object::toString)
+                    .orElse("no missing card");
+            assertTrue(
+                    missingCard.isEmpty(),
+                    String.format("RoyalFlush#getCards missing card %s", missingCardStr)
+            );
         }
     }
 }

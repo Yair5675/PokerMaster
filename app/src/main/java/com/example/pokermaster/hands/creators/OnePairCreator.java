@@ -57,6 +57,6 @@ public class OnePairCreator implements PokerHandCreator {
 
         if (pairRank < Card.MIN_RANK)
             throw new MissingRankRepetitionsException("Didn't find pair rank in hand");
-        return new OnePair(pairRank, kickerRanks);
+        return new OnePair(pairRank, kickerRanks, rawHand);
     }
 }
