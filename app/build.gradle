@@ -19,7 +19,11 @@ android {
     testOptions {
         unitTests.all {
             // This is required to run JUnit 5 tests
-            useJUnitPlatform()
+            useJUnitPlatform {
+                if (!project.hasProperty("includeExpensive")) {
+                    excludeTags "expensive"
+                }
+            }
         }
     }
 
