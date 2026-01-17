@@ -25,4 +25,20 @@ public class CardIndexer {
 
         return Optional.of(new Card(rank, suits[suitIndex]));
     }
+
+    public void setCardToIndex(Card card, int index) {
+        int rank = (index % POSSIBLE_RANK_VALUES_COUNT) + Card.MIN_RANK;
+
+        int suitIndex = index / POSSIBLE_RANK_VALUES_COUNT;
+        Suit[] suits = Suit.values();
+        if (suitIndex < 0 || suitIndex >= suits.length) {
+            throw new IllegalArgumentException(String.format(
+                    "%d is an invalid index (results in an invalid suit of ordinal %d)",
+                    index, suitIndex
+            ));
+        }
+
+        card.setRank(rank);
+        card.setSuit(suits[suitIndex]);
+    }
 }

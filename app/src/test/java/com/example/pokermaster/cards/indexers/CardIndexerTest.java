@@ -32,6 +32,20 @@ public class CardIndexerTest {
         }
     }
 
+    @Test
+    public void testSetCardToIndex_sanity() {
+        Card testedCard = new Card(Card.MAX_RANK, Suit.DIAMOND);
+        for (int rank = Card.MIN_RANK; rank <= Card.MAX_RANK; rank++) {
+            for (Suit suit : Suit.values()) {
+                Card currentCard = new Card(rank, suit);
+                int currentCardIndex = cardIndexer.getCardIndex(currentCard);
+
+                cardIndexer.setCardToIndex(testedCard, currentCardIndex);
+                assertEquals(currentCard, testedCard);
+            }
+        }
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {Integer.MAX_VALUE, Integer.MIN_VALUE})
     public void testGetCardFromIndex_ReturnsEmptyOptional_WhenGivenInvalidIndex(int invalidIndex) {
